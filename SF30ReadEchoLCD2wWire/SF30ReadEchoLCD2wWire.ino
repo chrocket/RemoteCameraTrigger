@@ -1,3 +1,8 @@
+#include <RFM69.h>
+#include <RFM69registers.h>
+#include <RFM69_ATC.h>
+#include <RFM69_OTA.h>
+
 /*
   SF30 Serial Demo V1.0 
   Author: Zakia Ben Youss
@@ -50,8 +55,9 @@ Kalman myFilter(10, 5, 20, 25);
 
 const unsigned int  ON_TIME_MS = 1000 ;          // Camera bulb on time when trigger fires (typical vals 1-3 seconds)      
 const unsigned int  CAMERA_PIN = 8  ;            // Pin for camera opto-isolator
-const unsigned int LED_PIN1 = 11  ;              // pin for LED that indicates trigger
+const unsigned int LED_PIN1 = 4  ;              // pin for LED that indicates trigger
 const unsigned int LED_PIN2 = 9  ;              // pin for LED that indicates trigger
+const unsigned int TRIGGER_PIN2 = 5;
 const int POT_IN_ANALOG_PIN = A5;  // Analog input pin that the potentiometer is attached to
 const float MAX_RANGE_FT = 160.0  ;        // Max range of SF-30B is 50 m
 //const float CM_TO_INCH = 0.0328084;
@@ -80,11 +86,17 @@ void setup()
   //Wire.setClock(400000); //Optional - set I2C SCL to High Speed Mode of 400kHz
 
   pinMode(CAMERA_PIN, OUTPUT);
-  pinMode(LED_PIN1, OUTPUT);
-   pinMode(LED_PIN2, OUTPUT);
   digitalWrite(CAMERA_PIN, LOW);
-  digitalWrite(LED_PIN1, LOW);
+ 
+  pinMode(LED_PIN2, OUTPUT);
   digitalWrite(LED_PIN2, LOW);
+
+  pinMode(LED_PIN1, OUTPUT);
+  digitalWrite(LED_PIN1, LOW);
+  
+  pinMode(TRIGGER_PIN2, OUTPUT);
+  digitalWrite(TRIGGER_PIN2, LOW);
+
 
 
   //Send the reset command to the display - this forces the cursor to return to the beginning of the display
@@ -210,6 +222,7 @@ bool checkTrigger(float distance, float threshold_ft){
       digitalWrite(CAMERA_PIN, HIGH);
       digitalWrite(LED_PIN1, HIGH);
       digitalWrite(LED_PIN2, HIGH);
+      digitalWrite(TRIGGER_PIN2, HIGH);
       ser.println("Setting trigger");
    }
    if( isTriggered){
@@ -219,6 +232,7 @@ bool checkTrigger(float distance, float threshold_ft){
           digitalWrite(CAMERA_PIN, LOW);
           digitalWrite(LED_PIN1, LOW);
           digitalWrite(LED_PIN2, LOW);
+          digitalWrite(TRIGGER_PIN2, LOW);
           ser.println("Clearing trigger");
       }
    }
