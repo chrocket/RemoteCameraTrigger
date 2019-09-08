@@ -1,6 +1,6 @@
 // rf69 demo tx rx.pde
 // -*- mode: C++ -*-
-// Example sketch showing how to create a simple messageing client
+// Example sketch showing how to create a simple addressed, reliable messaging client
 // with the RH_RF69 class. RH_RF69 class does not provide for addressing or
 // reliability, so you should only use RH_RF69  if you do not need the higher
 // level messaging abilities.
@@ -10,38 +10,50 @@
 
 #include <SPI.h>
 #include <RH_RF69.h>
-
+#include <RHReliableDatagram.h>
 /************ Radio Setup ***************/
 
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF69_FREQ 915.3
 
+// Where to send packets to!
+#define DEST_ADDRESS   1
+// change addresses for each client board, any number :)
+#define MY_ADDRESS     2
 
 
-#if defined(ADAFRUIT_FEATHER_M0) // Feather M0 w/Radio
-  #define RFM69_CS      8
+
+// Sparkfun Redboard Turbo defs
+#define Serial SerialUSB
+
+  #define RFM69_CS      4
   #define RFM69_INT     3
-  #define RFM69_RST     4
-  #define LED           13
-#endif
+  #define RFM69_RST     2
+  #define LED           7
 
-// Other pinout #defines removed
+
+// Other #define board types removed
 
 // Singleton instance of the radio driver
 RH_RF69 rf69(RFM69_CS, RFM69_INT);
+
+// Class to manage message delivery and receipt, using the driver declared above
+RHReliableDatagram rf69_manager(rf69, MY_ADDRESS);
+
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
 void setup() 
 {
   Serial.begin(115200);
-  //while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
+  
+  while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
 
   pinMode(LED, OUTPUT);     
   pinMode(RFM69_RST, OUTPUT);
   digitalWrite(RFM69_RST, LOW);
 
-  Serial.println("Feather RFM69 TX Test!");
+  Serial.println("Feather Addressed RFM69 TX Test!");
   Serial.println();
 
   // manual reset
@@ -50,25 +62,31 @@ void setup()
   digitalWrite(RFM69_RST, LOW);
   delay(10);
   
-  if (!rf69.init()) {
+  if (!rf69_manager.init()) {
     Serial.println("RFM69 radio init failed");
     while (1);
   }
   Serial.println("RFM69 radio init OK!");
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM (for low power module)
   // No encryption
+ //   if (!rf69.setModemConfig(RH_RF69::GFSK_Rb2Fd5)) {
+ //     Serial.println("setModem failed");
+ // }
+ 
   if (!rf69.setFrequency(RF69_FREQ)) {
     Serial.println("setFrequency failed");
   }
 
-
   // If you are using a high power RF69 eg RFM69HW, you *must* set a Tx power with the
   // ishighpowermodule flag set like this:
+ 
   rf69.setTxPower(20, true);  // range from 14-20 for power, 2nd arg must be true for 69HCW
+
+
 
   // The encryption key has to be the same as the one in the server
   uint8_t key[] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-                    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x01};
+                    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
   rf69.setEncryptionKey(key);
   
   pinMode(LED, OUTPUT);
@@ -77,37 +95,40 @@ void setup()
 }
 
 
+// Dont put this on the stack:
+uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
+uint8_t data[] = "  OK";
 
 void loop() {
   delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
 
   char radiopacket[2] = "T";
- // itoa(packetnum++, radiopacket+13, 10);
+  itoa(packetnum++, radiopacket+13, 10);
   Serial.print("Sending "); Serial.println(radiopacket);
   
-  // Send a message!
-  rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-  unsigned long timeSent = micros();
-  rf69.waitPacketSent();
-
-  // Now wait for a reply
-  uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
-  uint8_t len = sizeof(buf);
-
-  if (rf69.waitAvailableTimeout(500))  { 
-    // Should be a reply message for us now   
-    if (rf69.recv(buf, &len)) {
-      unsigned long timeAck = micros();
-      Serial.print("Got a reply: ");
-      Serial.print(timeAck-timeSent);
-      Serial.print(" ");
-      Serial.println((char*)buf);
-      Blink(LED, 50, 3); //blink LED 3 times, 50ms between blinks
+  // Send a message to the DESTINATION!
+   unsigned int tSent = micros();
+  if (rf69_manager.sendtoWait((uint8_t *)radiopacket, strlen(radiopacket), DEST_ADDRESS)) {
+    // Now wait for a reply from the server
+    uint8_t len = sizeof(buf);
+    uint8_t from;   
+    if (rf69_manager.recvfromAckTimeout(buf, &len, 2000, &from)) {
+      buf[len] = 0; // zero out remaining string
+      unsigned int tAck = micros();
+      
+      Serial.print("Got reply from #"); Serial.print(from);
+      Serial.print(" [RSSI :");
+      Serial.print(rf69.lastRssi());
+      Serial.print("] : ");
+      Serial.print((char*)buf);   
+      Serial.print(", latency (us): ");
+      Serial.println(( tAck - tSent));  
+      Blink(LED, 40, 3); //blink LED 3 times, 40ms between blinks
     } else {
-      Serial.println("Receive failed");
+      Serial.println("No reply, is anyone listening?");
     }
   } else {
-    Serial.println("No reply, is another RFM69 listening?");
+    Serial.println("Sending failed (no ack)");
   }
 }
 

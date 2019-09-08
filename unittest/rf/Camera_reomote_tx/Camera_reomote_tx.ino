@@ -22,14 +22,17 @@
 #define MY_ADDRESS     2
 
 
+const unsigned int INPUT_TRIGGER_PIN = 5;
+
 
 
 #if defined(ADAFRUIT_FEATHER_M0) // Feather M0 w/Radio
   #define RFM69_CS      8
   #define RFM69_INT     3
   #define RFM69_RST     4
-  #define LED           13
+  #define LED_PIN           13
 #endif
+#define BUZZER_PIN 6
 
 // Other #define board types removed
 
@@ -41,17 +44,53 @@ RHReliableDatagram rf69_manager(rf69, MY_ADDRESS);
 
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
+uint32_t expire_time_1=0; 
+bool trigger_1 = false;
+uint32_t expire_time_2=0; 
+bool trigger_2 = false;
+
+
+
+
+void non_blocking_fire(uint32_t  &expire_time, bool &trigger_state, uint16_t  fire_msec){
+
+  uint32_t now = millis();
+  expire_time = now + fire_msec;
+  trigger_state = true;
+  
+}
+void non_blocking_blink(uint32_t  &expire_time, bool &trigger_state, uint16_t  pin){
+
+  if(trigger_state){
+    digitalWrite(pin, HIGH);
+  }else{
+    digitalWrite(pin, LOW);
+  }
+  uint32_t now = millis();
+  if(trigger_state){
+    if( now > expire_time){
+      trigger_state = false;
+    }
+  }
+  
+}
 
 void setup() 
 {
   Serial.begin(115200);
   //while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
 
-  pinMode(LED, OUTPUT);     
+  pinMode(LED_PIN, OUTPUT);   
+  pinMode(BUZZER_PIN, OUTPUT);     
   pinMode(RFM69_RST, OUTPUT);
   digitalWrite(RFM69_RST, LOW);
 
-  Serial.println("Feather Addressed RFM69 TX Test!");
+  pinMode(INPUT_TRIGGER_PIN, INPUT_PULLUP);
+ 
+
+
+
+  Serial.println("CWH Camera Trigger RFM69 TX Test!");
   Serial.println();
 
   // manual reset
@@ -87,7 +126,6 @@ void setup()
                     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
   rf69.setEncryptionKey(key);
   
-  pinMode(LED, OUTPUT);
 
   Serial.print("RFM69 radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
 }
@@ -98,35 +136,42 @@ uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
 uint8_t data[] = "  OK";
 
 void loop() {
-  delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
-
-  char radiopacket[2] = "T";
-  itoa(packetnum++, radiopacket+13, 10);
-  Serial.print("Sending "); Serial.println(radiopacket);
+ // delay(100);  // testing only
+  non_blocking_blink(expire_time_1, trigger_1, LED_PIN);
+ non_blocking_blink(expire_time_2, trigger_2, BUZZER_PIN);
   
-  // Send a message to the DESTINATION!
-   unsigned int tSent = micros();
-  if (rf69_manager.sendtoWait((uint8_t *)radiopacket, strlen(radiopacket), DEST_ADDRESS)) {
-    // Now wait for a reply from the server
-    uint8_t len = sizeof(buf);
-    uint8_t from;   
-    if (rf69_manager.recvfromAckTimeout(buf, &len, 2000, &from)) {
-      buf[len] = 0; // zero out remaining string
-      unsigned int tAck = micros();
-      
-      Serial.print("Got reply from #"); Serial.print(from);
-      Serial.print(" [RSSI :");
-      Serial.print(rf69.lastRssi());
-      Serial.print("] : ");
-      Serial.print((char*)buf);   
-      Serial.print(", latency (us): ");
-      Serial.println(( tAck - tSent));  
-      Blink(LED, 40, 3); //blink LED 3 times, 40ms between blinks
+  if(digitalRead(INPUT_TRIGGER_PIN)){
+    char radiopacket[2] = "T";
+    itoa(packetnum++, radiopacket+13, 10);
+    Serial.print("Sending "); Serial.println(radiopacket);
+    
+    // Send a message to the DESTINATION!
+     unsigned int tSent = micros();
+    if (rf69_manager.sendtoWait((uint8_t *)radiopacket, strlen(radiopacket), DEST_ADDRESS)) {
+      // Now wait for a reply from the server
+      uint8_t len = sizeof(buf);
+      uint8_t from;   
+      if (rf69_manager.recvfromAckTimeout(buf, &len, 2000, &from)) {
+        buf[len] = 0; // zero out remaining string
+        unsigned int tAck = micros();
+        
+        Serial.print("Got reply from #"); Serial.print(from);
+        Serial.print(" [RSSI :");
+        Serial.print(rf69.lastRssi());
+        Serial.print("] : ");
+        Serial.print((char*)buf);   
+        Serial.print(", latency (us): ");
+        Serial.println(( tAck - tSent));  
+        non_blocking_fire(expire_time_1, trigger_1, 200);
+         non_blocking_fire(expire_time_2, trigger_2, 50);
+     //   Blink(LED, 40, 3); //blink LED 3 times, 40ms between blinks
+      } else {
+        Serial.println("No reply, is anyone listening?");
+      }
     } else {
-      Serial.println("No reply, is anyone listening?");
+      Serial.println("Sending failed (no ack)");
     }
-  } else {
-    Serial.println("Sending failed (no ack)");
+
   }
 }
 

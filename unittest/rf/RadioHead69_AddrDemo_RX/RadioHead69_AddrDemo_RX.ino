@@ -62,15 +62,17 @@ void setup()
     while (1);
   }
   Serial.println("RFM69 radio init OK!");
-  // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM (for low power module)
+  // Defaults after in
+  //it are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM (for low power module)
   // No encryption
+  //  if (!rf69.setModemConfig(RH_RF69::GFSK_Rb2Fd5)) {
+  //    Serial.println("setModem failed");
+  //    }
   if (!rf69.setFrequency(RF69_FREQ)) {
     Serial.println("setFrequency failed");
   }
   
-//  if (!rf69.setModemConfig(RH_RF69::FSK_Rb2Fd5)) {
-//      Serial.println("setModem failed");
-//  }
+
   
   
   // If you are using a high power RF69 eg RFM69HW, you *must* set a Tx power with the
