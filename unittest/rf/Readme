@@ -1,0 +1,5 @@
+RadioHead69_RawDemo_RX and RadioHead69_RawDemo_Tx are raw (broadcast send and receive)
+
+ 	Camera_remote_rx and  	Camera_remote_rx  are addressed (reliable versions)
+  
+  Used 	Camera_remote_rx for benchmarking, but used RadioHead69_RawDemo_RX RadioHead69_RawDemo_TX in the field
