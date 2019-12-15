@@ -61,7 +61,6 @@ class FireTimer {
     byte pinLED;
     boolean ledState = LOW;
     unsigned long timeLedOn;
-
     unsigned long nextChangeTime = 0;
   public:
     FireTimer(byte pinLED, unsigned long timeLedOn) {
@@ -89,11 +88,38 @@ class FireTimer {
       nextChangeTime = currentTime + timeLedOn;      
     }
 };
-
+/*
+ * ButtonTimer CLASS DEFINITION
+ */
+class ButtonTimer {
+  private:
+    bool isPressed=false;
+    unsigned long timeFireOn;
+    unsigned long nextChangeTime = 0;
+  public:
+     ButtonTimer(unsigned int timeFireOnIn){
+          timeFireOn=timeFireOnIn;     
+     }
+     void press(){
+      isPressed  = true;
+      unsigned long currentTime = millis();
+      nextChangeTime = currentTime + timeFireOn;        
+     }
+    void check() {
+      unsigned long currentTime = millis();
+      if(currentTime >= nextChangeTime) {
+        isPressed = false;
+      }
+    }
+    bool isBPressed(){
+       return isPressed;    
+    }
+};
 
 FireTimer timer2(CAMERA_TRIGGER_OUT_PIN, ON_TIME_MS );
 FireTimer timer3(AUX_OUT_PIN, SHORT_TIME_MS ); 
 FireTimer timer4(LED_PIN, SHORT_TIME_MS ); 
+ButtonTimer buttonPressed( SHORT_TIME_MS ); 
 
 // Dont put this on the stack:
 uint8_t data[] = "R";
@@ -174,6 +200,7 @@ void loop() {
     timer2.check();
     timer3.check();
     timer4.check();
+    buttonPressed.check();
 
    // override
    if(   !digitalRead(PUSHBUTTON_IN_PIN)    ){
@@ -188,7 +215,7 @@ void loop() {
      Serial.print("Got Override, Sending Trigger out "); Serial.println(radiopacket);
      rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
      rf69.waitPacketSent();
-     delay(150);
+     
 
    }
 
@@ -233,7 +260,7 @@ void loop() {
   }
 
      // send out a message for Rx to echo their IDs
-     if(   !digitalRead(POLLREQUEST_IN_PIN)    ){
+     if(   !digitalRead(POLLREQUEST_IN_PIN)  &&  !buttonPressed.isBPressed()  ){
 
 
      // Trigger destination nodes
@@ -241,7 +268,8 @@ void loop() {
      Serial.print("Sending roll call request "); Serial.println(radiopacket);
      rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
      rf69.waitPacketSent();
-     delay(150);
+     buttonPressed.press();
+
    }
       
   // send out isArmed
@@ -253,7 +281,7 @@ void loop() {
       rf69.waitPacketSent();
      
      Serial.println("Arm pushbutton - Sending Arm command");
-     delay(150);
+
   }
   digitalWrite(ARM_INDICATOR_OUT_PIN, isArmed);
      
