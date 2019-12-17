@@ -33,7 +33,7 @@ const unsigned int  SHORT_TIME_MS = 100;
 
 char myId={'a'};
 
-bool receivedTriggered = false;
+
 bool isArmed = true;
 
 #if defined(ADAFRUIT_FEATHER_M0) // Feather M0 w/Radio
@@ -47,12 +47,6 @@ bool isArmed = true;
 
 // Singleton instance of the radio driver
 RH_RF69 rf69(RFM69_CS, RFM69_INT);
-
-
-
-char radiopacket[3];
-int16_t packetnum = 0;  // packet counter, we increment per xmission
-
 
 
 /*
@@ -121,19 +115,19 @@ ButtonTimer armButtonPressed( SHORT_TIME_MS );
 
 
 // Dont put this on the stack:
-uint8_t data[] = "R";
 uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
-
+char radiopacket[3];
 
 
 void setup() 
 {
   Serial.begin(115200);
-  while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
+ // while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
 
   randomSeed(analogRead(0)); 
   int tmp = random(10);
   sprintf(&myId,"%d",tmp); 
+  radiopacket[1]= myId;  radiopacket[2]= ' '; 
   
      
   pinMode(RFM69_RST, OUTPUT);
@@ -237,7 +231,7 @@ void loop() {
  
       
     // Trigger destination nodes
-     radiopacket[0]= 'T'; 
+     radiopacket[0]= 'T';  
      Serial.println("Trigger - Sending T command");
      rf69.send((uint8_t *)radiopacket, strlen(radiopacket)); 
      rf69.waitPacketSent();
@@ -245,28 +239,13 @@ void loop() {
      
      
   }
-  // If armed and get receive a T
-  // set isArmed to false
-  // Don't send another trigger out
-  if( isArmed &&  receivedTriggered ){
-        Serial.println("isArmed &&  receivedTriggered ");
-      
-      // fire outputs     
-      cameraTriggerTimer.fire();
-      auxTriggerTimer.fire();
-      tone(BUZZER_OUT_PIN, 400 /* hz**/, SHORT_TIME_MS /* ms */);
-
-      // clear trigger flag state variable
-      isArmed = false;
-      receivedTriggered = false;
-  }
 
      // send out a message for Rx to echo their IDs
      if(   !digitalRead(POLLREQUEST_IN_PIN)  &&  
      !pollButtonPressed.isBPressed()  ){
 
        // Trigger destination nodes
-       radiopacket[0]= 'P'; 
+       radiopacket[0]= 'P';  
        Serial.print("Sending roll call request "); Serial.println(radiopacket);
        rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
        rf69.waitPacketSent();
@@ -311,12 +290,14 @@ void loop() {
     if (strstr((char *)buf, "A")) {
            isArmed = true;     
            Serial.println("Received Arm commmand");
-           tone(BUZZER_OUT_PIN, 600 /* hz*., 100 /* ms */);
+       //    tone(BUZZER_OUT_PIN, 600 /* hz*., 100 /* ms */);
       }
     // trigger command
-    if (strstr((char *)buf, "T")) {
-           receivedTriggered = true;   
-            Serial.println("Received Trigger commmand");             
+    if (strstr((char *)buf, "T")) { 
+            Serial.println("Received Trigger commmand");  
+            // fire outputs     
+            cameraTriggerTimer.fire();
+            auxTriggerTimer.fire();           
       }
       // poll request
       if (strstr((char *)buf, "P")) {   
@@ -325,12 +306,15 @@ void loop() {
             radiopacket[1]=myId;
             char tmp = 'F';
             if(isArmed){
-              tmp = 'T';
+              tmp = 'Y';
+            }else{
+              tmp = 'N';
             }
             radiopacket[2]=tmp;
             // TODO add eeprom id
             rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-            rf69.waitPacketSent();         
+            rf69.waitPacketSent();  
+            radiopacket[2]= ' ';        
       }
       // poll response back from poll request
       if (strstr((char *)buf, "R")) { 
