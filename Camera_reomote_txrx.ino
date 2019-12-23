@@ -6,8 +6,34 @@
 // Demonstrates the use of AES encryption, setting the frequency and modem 
 // configuration
 
+/* Libs
+ *  LowPowerLab/RFM69
+ *  CRC32 by Christopher Baker
+ *  */
+
 #include <SPI.h>
 #include <RH_RF69.h>
+
+
+#include <CRC32.h>
+// https://github.com/bakercp/CRC32/blob/master/examples/CRC32/CRC32.ino
+
+void printChipId(char *buf) {
+  volatile uint32_t val1, val2, val3, val4;
+  volatile uint32_t *ptr1 = (volatile uint32_t *)0x0080A00C;
+  val1 = *ptr1;
+  volatile uint32_t *ptr = (volatile uint32_t *)0x0080A040;
+  val2 = *ptr;
+  ptr++;
+  val3 = *ptr;
+  ptr++;
+  val4 = *ptr;
+
+  
+
+  sprintf(buf, "%8x%8x%8x%8x", val1, val2, val3, val4);
+ 
+}
 
 /************ Radio Setup ***************/
 
@@ -17,7 +43,7 @@
 
 // inputs
 const unsigned int TRIGGER_IN_PIN = 10;
-const unsigned int PUSHBUTTON_IN_PIN=9; 
+const unsigned int PUSHNonBlocking_IN_PIN=9; 
 const unsigned int ARM_IN_PIN=6;
 const unsigned int POLLREQUEST_IN_PIN=12;
 // outputs
@@ -30,8 +56,8 @@ const unsigned int  ARM_INDICATOR_OUT_PIN = 11;
 const unsigned int  ON_TIME_MS = 1000 ;          // Camera bulb on time when trigger fires (typical vals 1-3 seconds)      
 const unsigned int  SHORT_TIME_MS = 200;
 
-unsigned int myId_i=0;
-char myId={'a'};
+uint32_t myId_i=0;
+char myId[3]={'abc'};
 
 
 bool isArmed = true;
@@ -50,17 +76,17 @@ RH_RF69 rf69(RFM69_CS, RFM69_INT);
 
 
 /*
- * ButtonTimer CLASS DEFINITION
+ * NonBlockingTimer CLASS DEFINITION
  */
-class ButtonTimer {
+class NonBlockingTimer {
   protected:
     bool isPressed=LOW;
     unsigned long timeFireOn;
     unsigned long nextChangeTime = 0;
   private:
-    ButtonTimer(){};
+    NonBlockingTimer(){};
   public:
-     ButtonTimer(unsigned int timeFireOnIn){
+     NonBlockingTimer(unsigned int timeFireOnIn){
           timeFireOn=timeFireOnIn;     
      }
      void fire(){
@@ -83,12 +109,12 @@ class ButtonTimer {
 /*
  * FireTimer CLASS DEFINITION
  */
-class FireTimer: public ButtonTimer{
+class FireTimer: public NonBlockingTimer{
   private:
     byte pinLED;
 
   public:
-    FireTimer(byte pinLED, unsigned long timeLedOn):ButtonTimer(timeLedOn) {
+    FireTimer(byte pinLED, unsigned long timeLedOn):NonBlockingTimer(timeLedOn) {
       this->pinLED = pinLED;
       pinMode(pinLED, OUTPUT);
     }
@@ -110,8 +136,8 @@ class FireTimer: public ButtonTimer{
 FireTimer cameraTriggerTimer(CAMERA_TRIGGER_OUT_PIN, ON_TIME_MS );
 FireTimer auxTriggerTimer(AUX_OUT_PIN, SHORT_TIME_MS ); 
 FireTimer txReceivedLEDTimer(LED_PIN, SHORT_TIME_MS ); 
-ButtonTimer pollButtonPressed( SHORT_TIME_MS ); 
-ButtonTimer armButtonPressed( SHORT_TIME_MS ); 
+NonBlockingTimer pollNonBlockingPressed( SHORT_TIME_MS ); 
+NonBlockingTimer armNonBlockingPressed( SHORT_TIME_MS ); 
 
 
 // Dont put this on the stack:
@@ -122,12 +148,15 @@ char radiopacket[3];
 void setup() 
 {
   Serial.begin(115200);
- // while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
-
-  randomSeed(analogRead(0)); 
-  myId_i = random(10);
-  sprintf(&myId,"%d",myId_i); 
-  radiopacket[1]= myId;  radiopacket[2]= ' '; 
+  //while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
+  char bufId[33];
+  printChipId(bufId);
+  myId_i = CRC32::calculate(bufId, 32);
+  Serial.print("My id = ");
+  Serial.println(myId_i);
+  myId_i = myId_i%1000;
+  sprintf(myId,"%3d",myId_i); 
+  radiopacket[1]= myId[0];  radiopacket[2]= ' '; 
   
      
   pinMode(RFM69_RST, OUTPUT);
@@ -139,7 +168,7 @@ void setup()
   pinMode(TRIGGER_IN_PIN,INPUT);
   pinMode(POLLREQUEST_IN_PIN, INPUT_PULLUP);
   pinMode(ARM_IN_PIN, INPUT_PULLUP);
-  pinMode(PUSHBUTTON_IN_PIN, INPUT_PULLUP); 
+  pinMode(PUSHNonBlocking_IN_PIN, INPUT_PULLUP); 
 
   
 
@@ -193,11 +222,11 @@ void loop() {
     cameraTriggerTimer.check();
     auxTriggerTimer.check();
     txReceivedLEDTimer.check();
-    pollButtonPressed.check();
-    armButtonPressed.check();
+    pollNonBlockingPressed.check();
+    armNonBlockingPressed.check();
 
-   // override trigger with push button
-   if(   !digitalRead(PUSHBUTTON_IN_PIN)    ){
+   // override trigger with push NonBlocking
+   if(   !digitalRead(PUSHNonBlocking_IN_PIN)    ){
       
       // fire outputs    
       cameraTriggerTimer.fire();
@@ -242,29 +271,29 @@ void loop() {
 
      // send out a message for Rx to echo their IDs
      if(   !digitalRead(POLLREQUEST_IN_PIN)  &&  
-     !pollButtonPressed.isBPressed()  ){
+     !pollNonBlockingPressed.isBPressed()  ){
 
        // Trigger destination nodes
        radiopacket[0]= 'P';  
        Serial.print("Sending roll call request "); Serial.println(radiopacket);
        rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
        rf69.waitPacketSent();
-       pollButtonPressed.fire();
+       pollNonBlockingPressed.fire();
    }
       
   
     // Send arm message out
     // set isArm flag
   if(  !digitalRead(ARM_IN_PIN) &&
-   !armButtonPressed.isBPressed()  ){
+   !armNonBlockingPressed.isBPressed()  ){
    
       isArmed = true;
       radiopacket[0]= 'A';
       rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
       rf69.waitPacketSent();
-      armButtonPressed.fire();
+      armNonBlockingPressed.fire();
      
-     Serial.println("Arm pushbutton - Sending Arm command");
+     Serial.println("Arm pushNonBlocking - Sending Arm command");
 
   }
   digitalWrite(ARM_INDICATOR_OUT_PIN, isArmed);
@@ -303,15 +332,17 @@ void loop() {
       if (strstr((char *)buf, "P")) {   
             Serial.println("Received request for poll, sending id"); 
             radiopacket[0]= 'R'; 
-            radiopacket[1]=myId;
+            radiopacket[1]=myId[0];
+            radiopacket[2]=myId[1];
+            radiopacket[3]=myId[2];
             char tmp = 'F';
             if(isArmed){
               tmp = 'Y';
             }else{
               tmp = 'N';
             }
-            radiopacket[2]=tmp;
-            delay(  myId_i*50 );
+            radiopacket[4]=tmp;
+            delay(  myId_i );
             rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
             rf69.waitPacketSent();  
             radiopacket[2]= ' ';        
