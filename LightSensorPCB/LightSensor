@@ -1,0 +1,5 @@
+Reference, Value, Footprint, Datasheet
+"Q1","SFH309","LED_THT:LED_D3.0mm_Clear","http://www.osram-os.com/Graphics/XPic2/00101811_0.pdf/SFH%20309,%20SFH%20309%20FA,%20Lead%20(Pb)%20Free%20Product%20-%20RoHS%20Compliant.pdf"
+"J1","Screw_Terminal_01x03","TerminalBlock_TE-Connectivity:TerminalBlock_TE_282834-3_1x03_P2.54mm_Horizontal","~"
+"R1","10K","Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal","~https://www.mouser.com/datasheet/2/427/ccf07-239748.pdf"
+"R2","R","Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal","~"
