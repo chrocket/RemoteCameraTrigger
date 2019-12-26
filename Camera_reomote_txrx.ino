@@ -42,25 +42,32 @@ void printChipId(char *buf) {
 
 
 // inputs
-const unsigned int TRIGGER_IN_PIN = 10;
-const unsigned int PUSHNonBlocking_IN_PIN=9; 
-const unsigned int ARM_IN_PIN=6;
-const unsigned int POLLREQUEST_IN_PIN=12;
-// outputs
+const unsigned int LOWHIGH_TRIGGER_IN_PIN = 5; // If armed, Low to high transition will trigger
+const unsigned int PUSH_IN_PIN=14; // Push button trigger overrided ("arm" does not have to be set)
+const unsigned int ARM_IN_PIN=15;  // Push button to arm sensor
+const unsigned int POLLREQUEST_IN_PIN=16;  // Push button to make roll call poll request
+const unsigned int HIGHLOW_TRIGGER_IN_PIN=17;  // If armed, High to low transition will trigger
+const unsigned int DELAYMS_PIN=18;  // Pot on analog in to set delay 0-200 ms
+const unsigned int SPARE_PIN=19;  // Reserved for future use
 
-const unsigned int BUZZER_OUT_PIN= 22;
-const unsigned int  CAMERA_TRIGGER_OUT_PIN = 5;       // Pin for camera opto-isolator
-const unsigned int  AUX_OUT_PIN = 23;
-const unsigned int  ARM_INDICATOR_OUT_PIN = 11;
+// outputs
+// LED_OUT 13
+const unsigned int BUZZER_OUT_PIN= 10;            // Pin to audible indicator
+const unsigned int CAMERA_TRIGGER_OUT_PIN = 11;   // Pin for camera opto-isolator
+const unsigned int CAMERA_FOCUS_OUT_PIN = 12;     // Pin for focus opto-isoloatr
+const unsigned int AUX_OUT_PIN = 9;               // Pin for 2nd trigger output
+const unsigned int ARM_INDICATOR_OUT_PIN = 6;     // Indicates sensor is armed, turns laser on
 
 const unsigned int  ON_TIME_MS = 1000 ;          // Camera bulb on time when trigger fires (typical vals 1-3 seconds)      
 const unsigned int  SHORT_TIME_MS = 200;
 
 uint32_t myId_i=0;
 char myId[3]={'abc'};
+// Dont put this on the stack:
+uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
+char radiopacket[5];
 
-
-bool isArmed = true;
+bool isArmed = false;
 
 #if defined(ADAFRUIT_FEATHER_M0) // Feather M0 w/Radio
   #define RFM69_CS      8
@@ -117,58 +124,70 @@ class FireTimer: public NonBlockingTimer{
     FireTimer(byte pinLED, unsigned long timeLedOn):NonBlockingTimer(timeLedOn) {
       this->pinLED = pinLED;
       pinMode(pinLED, OUTPUT);
+      isPressed=LOW;
     }
-    // Checks whether it is time to turn on or off the LED.
+    // Checks whether it is time to turn on or off the Output
     bool check() {
       unsigned long currentTime = millis();
       if(currentTime >= nextChangeTime) {
-          // LED is currently turned On. Turn Off LED.
+          // Turn output off when time expires
           isPressed = LOW;
 
-        }
-     digitalWrite(pinLED, isPressed);
-     return isPressed;  
-      
+      }
+       digitalWrite(pinLED, isPressed);
+       return isPressed;    
     }
 
 };
 
+// Definition of output triggers
 FireTimer cameraTriggerTimer(CAMERA_TRIGGER_OUT_PIN, ON_TIME_MS );
 FireTimer auxTriggerTimer(AUX_OUT_PIN, SHORT_TIME_MS ); 
 FireTimer txReceivedLEDTimer(LED_PIN, SHORT_TIME_MS ); 
+// These timers used to debounce buttons
 NonBlockingTimer pollNonBlockingPressed( SHORT_TIME_MS ); 
 NonBlockingTimer armNonBlockingPressed( SHORT_TIME_MS ); 
 
 
-// Dont put this on the stack:
-uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
-char radiopacket[3];
+
 
 
 void setup() 
 {
   Serial.begin(115200);
   //while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
+ 
+  // read unique CPU Id
   char bufId[33];
   printChipId(bufId);
-  myId_i = CRC32::calculate(bufId, 32);
+  myId_i = CRC32::calculate(bufId, 32); // compute checksum
   Serial.print("My id = ");
   Serial.println(myId_i);
   myId_i = myId_i%1000;
   sprintf(myId,"%3d",myId_i); 
-  radiopacket[1]= myId[0];  radiopacket[2]= ' '; 
+ radiopacket[1]=myId[0];
+ radiopacket[2]=myId[1];
+ radiopacket[3]=myId[2]; 
+ radiopacket[4]='N'; // isArmed
   
-     
+  // RFM69 Reset pin definition   
   pinMode(RFM69_RST, OUTPUT);
   digitalWrite(RFM69_RST, LOW);
 
+// Arm indicator LED
   pinMode(ARM_INDICATOR_OUT_PIN, OUTPUT);
+  digitalWrite(ARM_INDICATOR_OUT_PIN, isArmed);
+  pinMode(CAMERA_FOCUS_OUT_PIN, OUTPUT);
+  digitalWrite(CAMERA_FOCUS_OUT_PIN, LOW);
 
-
-  pinMode(TRIGGER_IN_PIN,INPUT);
+// Define input pins
+  pinMode(LOWHIGH_TRIGGER_IN_PIN,INPUT);
+  pinMode(HIGHLOW_TRIGGER_IN_PIN,INPUT_PULLUP);
   pinMode(POLLREQUEST_IN_PIN, INPUT_PULLUP);
   pinMode(ARM_IN_PIN, INPUT_PULLUP);
-  pinMode(PUSHNonBlocking_IN_PIN, INPUT_PULLUP); 
+  pinMode(PUSH_IN_PIN, INPUT_PULLUP); 
+  pinMode(DELAYMS_PIN, INPUT);
+  pinMode(SPARE_PIN, INPUT_PULLUP);
 
   
 
@@ -213,77 +232,82 @@ void setup()
 }
 
 
-// Dont put this on the stack:
+
 
 
 
 void loop() {
-   
+
+     // Update timer values
     cameraTriggerTimer.check();
     auxTriggerTimer.check();
     txReceivedLEDTimer.check();
     pollNonBlockingPressed.check();
     armNonBlockingPressed.check();
 
-   // override trigger with push NonBlocking
-   if(   !digitalRead(PUSHNonBlocking_IN_PIN)    ){
-      
+    // Read delay pot value
+    int delayms = analogRead(DELAYMS_PIN);
+
+   // TRIGGER OVERRIDE PB
+   // If user presses "fire" push button, it will trigger outputs
+   // This overrides any sensor values;  "isArmed" does not have to be set
+   if(   !digitalRead(PUSH_IN_PIN)    ){     
       // fire outputs    
       cameraTriggerTimer.fire();
       auxTriggerTimer.fire();
-       
-
-      
+             
      // Trigger destination nodes
-     radiopacket[0]= 'T'; 
-     
+     radiopacket[0]= 'T';     
      rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-     rf69.waitPacketSent();
-   //  tone(BUZZER_OUT_PIN, 450 /* hz**/, SHORT_TIME_MS /* ms */);
+     rf69.waitPacketSent();   
      
-     Serial.print("Got Override, Sending Trigger out "); Serial.println(radiopacket);
+     Serial.print("PB Trigger Override, Sending Trigger out "); Serial.println(radiopacket);
+      // clear isArmed flag state variable
+      isArmed = false;
+      radiopacket[4]='N';
    }
 
+  // SENSOR TRIGGER INPUT
   // If armed and get a sensor trigger
   // fire things and send a T out
   // set isArmed to false
-  if( isArmed && digitalRead(TRIGGER_IN_PIN )  ){
+  if( isArmed && 
+    (digitalRead(LOWHIGH_TRIGGER_IN_PIN) || !digitalRead(HIGHLOW_TRIGGER_IN_PIN))
+    ){
 
       
       // fire outputs
-  //    tone(BUZZER_OUT_PIN, 100 /* hz**/, SHORT_TIME_MS /* ms */);
       cameraTriggerTimer.fire();
       auxTriggerTimer.fire();
 
-      // clear trigger flag state variable
+      // clear isArmed flag state variable
       isArmed = false;
- 
+      radiopacket[4]='N';
       
     // Trigger destination nodes
      radiopacket[0]= 'T';  
-     Serial.println("Trigger - Sending T command");
+     
      rf69.send((uint8_t *)radiopacket, strlen(radiopacket)); 
      rf69.waitPacketSent();
-
-     
-     
+     Serial.print("Sensor Trigger - Sending T command ");Serial.println(radiopacket);    
   }
 
-     // send out a message for Rx to echo their IDs
-     if(   !digitalRead(POLLREQUEST_IN_PIN)  &&  
+   // POLL REQUEST PB
+   // send out a message for Rx to echo their IDs
+  if(   !digitalRead(POLLREQUEST_IN_PIN)  &&  
      !pollNonBlockingPressed.isBPressed()  ){
 
-       // Trigger destination nodes
-       radiopacket[0]= 'P';  
-       Serial.print("Sending roll call request "); Serial.println(radiopacket);
+       // Poll requeset to destination nodes
+       radiopacket[0]= 'P';      
        rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
        rf69.waitPacketSent();
+       Serial.print("Poll request PB, sending roll call request "); Serial.println(radiopacket);
        pollNonBlockingPressed.fire();
    }
       
-  
-    // Send arm message out
-    // set isArm flag
+  // ARM PB
+  // Send arm message out
+  // set isArm flag to true
   if(  !digitalRead(ARM_IN_PIN) &&
    !armNonBlockingPressed.isBPressed()  ){
    
@@ -291,12 +315,15 @@ void loop() {
       radiopacket[0]= 'A';
       rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
       rf69.waitPacketSent();
-      armNonBlockingPressed.fire();
+      
      
-     Serial.println("Arm pushNonBlocking - Sending Arm command");
+     Serial.print("Arm PB,  Sending Arm command ");Serial.println(radiopacket);
+     tone(BUZZER_OUT_PIN, 100 /* hz*/, 100 /* ms */);
+     armNonBlockingPressed.fire();
 
   }
   digitalWrite(ARM_INDICATOR_OUT_PIN, isArmed);
+  digitalWrite(CAMERA_FOCUS_OUT_PIN, isArmed);
 
  // Receive commands    
  if (rf69.available())
@@ -304,14 +331,16 @@ void loop() {
     uint8_t len = sizeof(buf);
     if (rf69.recv(buf, &len)) {
       if (!len) return;
-      buf[len] = 0;
+     // buf[len] = 0;
+      buf[5] = 0;
+      /*
       Serial.print("Received [");
       Serial.print(len);
       Serial.print("]: ");
       Serial.println((char*)buf);
       Serial.print("RSSI: ");
       Serial.println(rf69.lastRssi(), DEC);
-
+*/
 
     txReceivedLEDTimer.fire(); // blink the LED indicating a tx received
 
@@ -319,37 +348,36 @@ void loop() {
     if (strstr((char *)buf, "A")) {
            isArmed = true;     
            Serial.println("Received Arm commmand");
-       //    tone(BUZZER_OUT_PIN, 600 /* hz*., 100 /* ms */);
+           radiopacket[4]='Y';
+           tone(BUZZER_OUT_PIN, 100 /* hz*/, 100 /* ms */);
       }
     // trigger command
-    if (strstr((char *)buf, "T")) { 
-            Serial.println("Received Trigger commmand");  
+    if (strstr((char *)buf, "T")) {            
             // fire outputs     
             cameraTriggerTimer.fire();
-            auxTriggerTimer.fire();           
+            auxTriggerTimer.fire(); 
+            Serial.println("Received Trigger commmand");  
+            tone(BUZZER_OUT_PIN, 450 /* hz**/, SHORT_TIME_MS /* ms */); 
+            // clear isArmed flag state variable
+            isArmed = false;
+            radiopacket[4]='N';                     
       }
       // poll request
       if (strstr((char *)buf, "P")) {   
-            Serial.println("Received request for poll, sending id"); 
+            Serial.println("Received request for poll, sending id back"); 
             radiopacket[0]= 'R'; 
-            radiopacket[1]=myId[0];
-            radiopacket[2]=myId[1];
-            radiopacket[3]=myId[2];
-            char tmp = 'F';
-            if(isArmed){
-              tmp = 'Y';
-            }else{
-              tmp = 'N';
-            }
-            radiopacket[4]=tmp;
+
+ 
             delay(  myId_i );
             rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-            rf69.waitPacketSent();  
-            radiopacket[2]= ' ';        
+            rf69.waitPacketSent();         
       }
       // poll response back from poll request
       if (strstr((char *)buf, "R")) { 
-        Serial.println("Got an id response back");
+        Serial.print("Got an id response back: ");
+        Serial.print((char*)buf);
+        Serial.print(", RSSI: ");
+        Serial.println(rf69.lastRssi(), DEC);
       }
 
     } 
