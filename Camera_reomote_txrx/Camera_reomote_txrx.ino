@@ -43,18 +43,18 @@ void printChipId(char *buf) {
 
 // inputs
 const unsigned int LOWHIGH_TRIGGER_IN_PIN = 5; // If armed, Low to high transition will trigger
-const unsigned int PUSH_IN_PIN=14; // Push button trigger overrided ("arm" does not have to be set)
-const unsigned int ARM_IN_PIN=15;  // Push button to arm sensor
-const unsigned int POLLREQUEST_IN_PIN=16;  // Push button to make roll call poll request
 const unsigned int HIGHLOW_TRIGGER_IN_PIN=17;  // If armed, High to low transition will trigger
+const unsigned int PUSH_IN_PIN=14; // Push button trigger override ("arm" does not have to be set)
+const unsigned int ARM_IN_PIN=15;  // Push button to arm sensor
+const unsigned int POLLREQUEST_IN_PIN=16;  // Push button to send roll call poll request to other nodes
 const unsigned int DELAYMS_PIN=18;  // Pot on analog in to set delay 0-200 ms
 const unsigned int SPARE_PIN=19;  // Reserved for future use
 
 // outputs
 // LED_OUT 13
 const unsigned int BUZZER_OUT_PIN= 10;            // Pin to audible indicator
-const unsigned int CAMERA_TRIGGER_OUT_PIN = 11;   // Pin for camera opto-isolator
-const unsigned int CAMERA_FOCUS_OUT_PIN = 12;     // Pin for focus opto-isoloatr
+const unsigned int CAMERA_TRIGGER_OUT_PIN = 12;   // Pin for focus opto-isolator
+const unsigned int CAMERA_FOCUS_OUT_PIN = 11;     // Pin for shtter opto-isoloatr
 const unsigned int AUX_OUT_PIN = 9;               // Pin for 2nd trigger output
 const unsigned int ARM_INDICATOR_OUT_PIN = 6;     // Indicates sensor is armed, turns laser on
 
@@ -229,6 +229,7 @@ void setup()
   
 
   Serial.print("RFM69 radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
+   tone(BUZZER_OUT_PIN, 100 /* hz*/, 2000 /* ms */);
 }
 
 
@@ -262,6 +263,9 @@ void loop() {
      rf69.waitPacketSent();   
      
      Serial.print("PB Trigger Override, Sending Trigger out "); Serial.println(radiopacket);
+      // clear isArmed flag state variable
+      isArmed = false;
+      radiopacket[4]='N';
    }
 
   // SENSOR TRIGGER INPUT
@@ -277,7 +281,7 @@ void loop() {
       cameraTriggerTimer.fire();
       auxTriggerTimer.fire();
 
-      // clear trigger flag state variable
+      // clear isArmed flag state variable
       isArmed = false;
       radiopacket[4]='N';
       
@@ -300,6 +304,7 @@ void loop() {
        rf69.waitPacketSent();
        Serial.print("Poll request PB, sending roll call request "); Serial.println(radiopacket);
        pollNonBlockingPressed.fire();
+        tone(BUZZER_OUT_PIN, 1000 /* hz*/, 200 /* ms */);
    }
       
   // ARM PB
@@ -312,9 +317,11 @@ void loop() {
       radiopacket[0]= 'A';
       rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
       rf69.waitPacketSent();
-      armNonBlockingPressed.fire();
+      
      
      Serial.print("Arm PB,  Sending Arm command ");Serial.println(radiopacket);
+     tone(BUZZER_OUT_PIN, 100 /* hz*/, 100 /* ms */);
+     armNonBlockingPressed.fire();
 
   }
   digitalWrite(ARM_INDICATOR_OUT_PIN, isArmed);
@@ -344,7 +351,7 @@ void loop() {
            isArmed = true;     
            Serial.println("Received Arm commmand");
            radiopacket[4]='Y';
-           tone(BUZZER_OUT_PIN, 100 /* hz*., 100 /* ms */);
+           tone(BUZZER_OUT_PIN, 100 /* hz*/, 100 /* ms */);
       }
     // trigger command
     if (strstr((char *)buf, "T")) {            
@@ -352,7 +359,10 @@ void loop() {
             cameraTriggerTimer.fire();
             auxTriggerTimer.fire(); 
             Serial.println("Received Trigger commmand");  
-            tone(BUZZER_OUT_PIN, 450 /* hz**/, SHORT_TIME_MS /* ms */);                      
+            tone(BUZZER_OUT_PIN, 450 /* hz**/, SHORT_TIME_MS /* ms */); 
+            // clear isArmed flag state variable
+            isArmed = false;
+            radiopacket[4]='N';                     
       }
       // poll request
       if (strstr((char *)buf, "P")) {   
@@ -370,6 +380,7 @@ void loop() {
         Serial.print((char*)buf);
         Serial.print(", RSSI: ");
         Serial.println(rf69.lastRssi(), DEC);
+        tone(BUZZER_OUT_PIN, 1500 /* hz*/, 100 /* ms */);
       }
 
     } 
