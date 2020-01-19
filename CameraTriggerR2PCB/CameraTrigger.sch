@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:CameraTrigger-cache
 EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
@@ -474,24 +473,16 @@ Wire Wire Line
 	6850 1150 6800 1150
 Wire Wire Line
 	7550 1150 7500 1150
-Wire Wire Line
-	8150 650  7950 650 
-Wire Wire Line
-	8150 850  8150 650 
-Wire Wire Line
-	8150 1250 8100 1250
-Wire Wire Line
-	8150 950  8150 1250
 $Comp
 L Connector:Screw_Terminal_01x02 J1
 U 1 1 5DFF36EA
-P 7950 850
-F 0 "J1" H 8030 842 50  0000 L CNN
-F 1 "Power" H 8030 751 50  0000 L CNN
-F 2 "AMASS_XT30U-F_1x02_P5.0mm_Vertical" H 7950 850 50  0001 C CNN
-F 3 "~https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1308389_EUROSTYLE_TERMINAL_BLOCKS&DocType=CS&DocLang=English" H 7950 850 50  0001 C CNN
-	1    7950 850 
-	-1   0    0    -1  
+P 8300 950
+F 0 "J1" H 8380 942 50  0000 L CNN
+F 1 "Power" H 8380 851 50  0000 L CNN
+F 2 "AMASS_XT30U-F_1x02_P5.0mm_Vertical" H 8300 950 50  0001 C CNN
+F 3 "~https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1308389_EUROSTYLE_TERMINAL_BLOCKS&DocType=CS&DocLang=English" H 8300 950 50  0001 C CNN
+	1    8300 950 
+	1    0    0    1   
 $EndComp
 $Comp
 L Switch:SW_SPST SW1
@@ -533,8 +524,6 @@ Wire Wire Line
 	1600 4300 1800 4300
 Text GLabel 3550 4050 0    50   Input ~ 0
 AuxIn
-Wire Wire Line
-	3550 4050 4200 4050
 Wire Wire Line
 	6150 1100 6450 1100
 $Comp
@@ -971,9 +960,6 @@ Wire Wire Line
 	3550 4150 4200 4150
 Wire Wire Line
 	4200 4250 3500 4250
-Wire Wire Line
-	8350 650  8150 650 
-Connection ~ 8150 650 
 Wire Wire Line
 	8950 2400 8950 2450
 $Comp
@@ -1570,4 +1556,53 @@ Wire Wire Line
 	950  7300 950  7450
 Wire Wire Line
 	10300 6000 10300 6250
+Wire Wire Line
+	7950 650  8100 650 
+Wire Wire Line
+	8100 950  8100 1250
+Wire Wire Line
+	8100 850  8100 650 
+Connection ~ 8100 650 
+Wire Wire Line
+	8100 650  8350 650 
+Text Notes 5200 4650 0    50   ~ 0
+5
+Text Notes 5200 4550 0    50   ~ 0
+6
+Text Notes 5200 4450 0    50   ~ 0
+9
+Text Notes 5200 4350 0    50   ~ 0
+10
+Text Notes 5200 4250 0    50   ~ 0
+11
+Text Notes 5200 4150 0    50   ~ 0
+12
+Text Notes 3750 3750 0    50   ~ 0
+14
+Text Notes 3750 3850 0    50   ~ 0
+15
+Text Notes 3750 3950 0    50   ~ 0
+16
+Text Notes 3750 4250 0    50   ~ 0
+19
+Text Notes 3750 4350 0    50   ~ 0
+24
+Text Notes 3750 4450 0    50   ~ 0
+23
+Text Notes 3750 4550 0    50   ~ 0
+22
+Wire Wire Line
+	3550 4050 4200 4050
+Text Notes 3750 4050 0    50   ~ 0
+17
+Text Notes 3750 4150 0    50   ~ 0
+18
+Text Notes 5050 4650 0    50   ~ 0
+21
+Text Notes 5000 4750 0    50   ~ 0
+20
+Text Notes 4150 4650 0    50   ~ 0
+0
+Text Notes 4150 4750 0    50   ~ 0
+1
 $EndSCHEMATC
