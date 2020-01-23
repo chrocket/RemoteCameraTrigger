@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:CameraTrigger-cache
 EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
@@ -476,34 +477,34 @@ Wire Wire Line
 $Comp
 L Connector:Screw_Terminal_01x02 J1
 U 1 1 5DFF36EA
-P 8300 950
-F 0 "J1" H 8380 942 50  0000 L CNN
-F 1 "Power" H 8380 851 50  0000 L CNN
-F 2 "AMASS_XT30U-F_1x02_P5.0mm_Vertical" H 8300 950 50  0001 C CNN
-F 3 "~https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1308389_EUROSTYLE_TERMINAL_BLOCKS&DocType=CS&DocLang=English" H 8300 950 50  0001 C CNN
-	1    8300 950 
+P 9400 1400
+F 0 "J1" H 9480 1392 50  0000 L CNN
+F 1 "Power" H 9480 1301 50  0000 L CNN
+F 2 "Connector_AMASS:AMASS_XT30U-F_1x02_P5.0mm_Vertical" H 9400 1400 50  0001 C CNN
+F 3 "~https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1308389_EUROSTYLE_TERMINAL_BLOCKS&DocType=CS&DocLang=English" H 9400 1400 50  0001 C CNN
+	1    9400 1400
 	1    0    0    1   
 $EndComp
 $Comp
 L Switch:SW_SPST SW1
 U 1 1 5DFF1911
-P 7750 650
-F 0 "SW1" H 7750 885 50  0000 C CNN
-F 1 "SW_Power" H 7750 794 50  0000 C CNN
-F 2 "Button_Switch_THT:SW_DIP_SPSTx01_Piano_10.8x4.1mm_W7.62mm_P2.54mm" H 7750 650 50  0001 C CNN
-F 3 "~" H 7750 650 50  0001 C CNN
-	1    7750 650 
+P 8850 1100
+F 0 "SW1" H 8850 1335 50  0000 C CNN
+F 1 "SW_Power" H 8850 1244 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_DIP_SPSTx01_Slide_6.7x4.1mm_W7.62mm_P2.54mm_LowProfile" H 8850 1100 50  0001 C CNN
+F 3 "~" H 8850 1100 50  0001 C CNN
+	1    8850 1100
 	-1   0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR01
 U 1 1 5DFE4D89
-P 8100 1250
-F 0 "#PWR01" H 8100 1000 50  0001 C CNN
-F 1 "GND" H 8105 1077 50  0000 C CNN
-F 2 "" H 8100 1250 50  0001 C CNN
-F 3 "" H 8100 1250 50  0001 C CNN
-	1    8100 1250
+P 9200 1700
+F 0 "#PWR01" H 9200 1450 50  0001 C CNN
+F 1 "GND" H 9205 1527 50  0000 C CNN
+F 2 "" H 9200 1700 50  0001 C CNN
+F 3 "" H 9200 1700 50  0001 C CNN
+	1    9200 1700
 	-1   0    0    -1  
 $EndComp
 $Comp
@@ -538,10 +539,6 @@ F 3 "~" H 7500 850 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	7550 650  7550 700 
-Wire Wire Line
-	7550 700  7500 700 
-Wire Wire Line
 	7500 1000 7500 1150
 Connection ~ 7500 1150
 Wire Wire Line
@@ -552,7 +549,7 @@ U 1 1 5E13C8F9
 P 9150 2300
 F 0 "J12" H 8870 2233 50  0000 R CNN
 F 1 "Camera 2.5mm" H 8870 2324 50  0000 R CNN
-F 2 "CameraTriggerPCB:CUI_SJ1-3533NG" H 9150 2300 50  0001 C CNN
+F 2 "CameraTriggerPCB:CUI_SJ1-2503A" H 9150 2300 50  0001 C CNN
 F 3 "~" H 9150 2300 50  0001 C CNN
 	1    9150 2300
 	-1   0    0    1   
@@ -1199,10 +1196,10 @@ Wire Wire Line
 Wire Wire Line
 	5300 2900 5500 2900
 $Comp
-L Connector:TestPoint TP1
+L Connector:TestPoint TP1+5
 U 1 1 5E4F74AD
 P 6450 1100
-F 0 "TP1" H 6508 1218 50  0000 L CNN
+F 0 "TP1+5" H 6508 1218 50  0000 L CNN
 F 1 "+5V" H 6508 1127 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Keystone_5010-5014_Multipurpose" H 6650 1100 50  0001 C CNN
 F 3 "~" H 6650 1100 50  0001 C CNN
@@ -1268,10 +1265,10 @@ Connection ~ 1000 1050
 Wire Wire Line
 	1000 1050 1000 950 
 $Comp
-L Connector:TestPoint TP2
+L Connector:TestPoint TP2+3.3V1
 U 1 1 5E154697
 P 2250 6550
-F 0 "TP2" H 2308 6668 50  0000 L CNN
+F 0 "TP2+3.3V1" H 2308 6668 50  0000 L CNN
 F 1 "+3.3V" H 2308 6577 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Keystone_5010-5014_Multipurpose" H 2450 6550 50  0001 C CNN
 F 3 "~" H 2450 6550 50  0001 C CNN
@@ -1286,10 +1283,10 @@ Connection ~ 2100 6950
 Wire Wire Line
 	2100 6950 2150 6950
 $Comp
-L Connector:TestPoint TP3
+L Connector:TestPoint TP3Arm1
 U 1 1 5E15FDFD
 P 3600 6700
-F 0 "TP3" H 3658 6818 50  0000 L CNN
+F 0 "TP3Arm1" H 3658 6818 50  0000 L CNN
 F 1 "Arm" H 3658 6727 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Keystone_5010-5014_Multipurpose" H 3800 6700 50  0001 C CNN
 F 3 "~" H 3800 6700 50  0001 C CNN
@@ -1304,10 +1301,10 @@ Connection ~ 3550 7000
 Wire Wire Line
 	3550 7000 3600 7000
 $Comp
-L Connector:TestPoint TP4
+L Connector:TestPoint TP4Fire1
 U 1 1 5E16AFA8
 P 5500 2350
-F 0 "TP4" H 5558 2468 50  0000 L CNN
+F 0 "TP4Fire1" H 5558 2468 50  0000 L CNN
 F 1 "Fire" H 5558 2377 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Keystone_5010-5014_Multipurpose" H 5700 2350 50  0001 C CNN
 F 3 "~" H 5700 2350 50  0001 C CNN
@@ -1320,10 +1317,10 @@ Connection ~ 5500 2900
 Wire Wire Line
 	5500 2900 5650 2900
 $Comp
-L Connector:TestPoint TP5
+L Connector:TestPoint TP5Trigger1
 U 1 1 5E175C9E
 P 1650 1500
-F 0 "TP5" H 1708 1618 50  0000 L CNN
+F 0 "TP5Trigger1" H 1708 1618 50  0000 L CNN
 F 1 "Trigger" H 1708 1527 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Keystone_5010-5014_Multipurpose" H 1850 1500 50  0001 C CNN
 F 3 "~" H 1850 1500 50  0001 C CNN
@@ -1331,10 +1328,10 @@ F 3 "~" H 1850 1500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:TestPoint TP6
+L Connector:TestPoint TP6Arm1
 U 1 1 5E17664B
 P 2100 2450
-F 0 "TP6" H 2158 2568 50  0000 L CNN
+F 0 "TP6Arm1" H 2158 2568 50  0000 L CNN
 F 1 "Arm" H 2158 2477 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Keystone_5010-5014_Multipurpose" H 2300 2450 50  0001 C CNN
 F 3 "~" H 2300 2450 50  0001 C CNN
@@ -1342,10 +1339,10 @@ F 3 "~" H 2300 2450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:TestPoint TP7
+L Connector:TestPoint TP7Poll1
 U 1 1 5E176E86
 P 2450 3550
-F 0 "TP7" H 2508 3668 50  0000 L CNN
+F 0 "TP7Poll1" H 2508 3668 50  0000 L CNN
 F 1 "Poll" H 2508 3577 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Keystone_5010-5014_Multipurpose" H 2650 3550 50  0001 C CNN
 F 3 "~" H 2650 3550 50  0001 C CNN
@@ -1444,30 +1441,30 @@ GND
 $Comp
 L power:PWR_FLAG #FLG0101
 U 1 1 5E299CAD
-P 8650 650
-F 0 "#FLG0101" H 8650 725 50  0001 C CNN
-F 1 "PWR_FLAG" H 8650 823 50  0000 C CNN
-F 2 "" H 8650 650 50  0001 C CNN
-F 3 "~" H 8650 650 50  0001 C CNN
-	1    8650 650 
+P 9750 1100
+F 0 "#FLG0101" H 9750 1175 50  0001 C CNN
+F 1 "PWR_FLAG" H 9750 1273 50  0000 C CNN
+F 2 "" H 9750 1100 50  0001 C CNN
+F 3 "~" H 9750 1100 50  0001 C CNN
+	1    9750 1100
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8650 650  8350 650 
-Connection ~ 8350 650 
+	9750 1100 9450 1100
+Connection ~ 9450 1100
 $Comp
 L power:+7.5V #PWR0101
 U 1 1 5E2B3A3C
-P 8350 500
-F 0 "#PWR0101" H 8350 350 50  0001 C CNN
-F 1 "+7.5V" H 8365 673 50  0000 C CNN
-F 2 "" H 8350 500 50  0001 C CNN
-F 3 "" H 8350 500 50  0001 C CNN
-	1    8350 500 
+P 9450 950
+F 0 "#PWR0101" H 9450 800 50  0001 C CNN
+F 1 "+7.5V" H 9465 1123 50  0000 C CNN
+F 2 "" H 9450 950 50  0001 C CNN
+F 3 "" H 9450 950 50  0001 C CNN
+	1    9450 950 
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8350 500  8350 650 
+	9450 950  9450 1100
 $Comp
 L power:PWR_FLAG #FLG0102
 U 1 1 5E2C0CBC
@@ -1557,14 +1554,14 @@ Wire Wire Line
 Wire Wire Line
 	10300 6000 10300 6250
 Wire Wire Line
-	7950 650  8100 650 
+	9050 1100 9200 1100
 Wire Wire Line
-	8100 950  8100 1250
+	9200 1400 9200 1700
 Wire Wire Line
-	8100 850  8100 650 
-Connection ~ 8100 650 
+	9200 1300 9200 1100
+Connection ~ 9200 1100
 Wire Wire Line
-	8100 650  8350 650 
+	9200 1100 9450 1100
 Text Notes 5200 4650 0    50   ~ 0
 5
 Text Notes 5200 4550 0    50   ~ 0
@@ -1605,4 +1602,106 @@ Text Notes 4150 4650 0    50   ~ 0
 0
 Text Notes 4150 4750 0    50   ~ 0
 1
+$Comp
+L Connector:Screw_Terminal_01x02 J13
+U 1 1 5E2D1509
+P 4550 1300
+F 0 "J13" H 4630 1292 50  0000 L CNN
+F 1 "+5V Always on" H 4630 1201 50  0000 L CNN
+F 2 "TerminalBlock_TE-Connectivity:TerminalBlock_TE_282834-2_1x02_P2.54mm_Horizontal" H 4550 1300 50  0001 C CNN
+F 3 "~" H 4550 1300 50  0001 C CNN
+	1    4550 1300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR020
+U 1 1 5E2D1EA9
+P 4400 1700
+F 0 "#PWR020" H 4400 1450 50  0001 C CNN
+F 1 "GND" H 4405 1527 50  0000 C CNN
+F 2 "" H 4400 1700 50  0001 C CNN
+F 3 "" H 4400 1700 50  0001 C CNN
+	1    4400 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR019
+U 1 1 5E2D2CEC
+P 4350 1000
+F 0 "#PWR019" H 4350 850 50  0001 C CNN
+F 1 "+5V" H 4365 1173 50  0000 C CNN
+F 2 "" H 4350 1000 50  0001 C CNN
+F 3 "" H 4350 1000 50  0001 C CNN
+	1    4350 1000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4350 1000 4350 1300
+Wire Wire Line
+	4350 1400 4400 1400
+Wire Wire Line
+	4400 1400 4400 1700
+$Comp
+L Connector:Screw_Terminal_01x02 J14
+U 1 1 5E2EF987
+P 8900 600
+F 0 "J14" V 8864 412 50  0000 R CNN
+F 1 "Ext power switch" V 8773 412 50  0000 R CNN
+F 2 "TerminalBlock_TE-Connectivity:TerminalBlock_TE_282834-2_1x02_P2.54mm_Horizontal" H 8900 600 50  0001 C CNN
+F 3 "~" H 8900 600 50  0001 C CNN
+	1    8900 600 
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	9000 800  9200 800 
+Wire Wire Line
+	9200 800  9200 1100
+Wire Wire Line
+	8650 800  8900 800 
+$Comp
+L Connector:TestPoint GND1
+U 1 1 5E3545BA
+P 3650 1150
+F 0 "GND1" H 3708 1268 50  0000 L CNN
+F 1 "TestPoint" H 3708 1177 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Keystone_5000-5004_Miniature" H 3850 1150 50  0001 C CNN
+F 3 "~" H 3850 1150 50  0001 C CNN
+	1    3650 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0102
+U 1 1 5E354EDA
+P 3650 1500
+F 0 "#PWR0102" H 3650 1250 50  0001 C CNN
+F 1 "GND" H 3655 1327 50  0000 C CNN
+F 2 "" H 3650 1500 50  0001 C CNN
+F 3 "" H 3650 1500 50  0001 C CNN
+	1    3650 1500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3650 1150 3650 1500
+Wire Wire Line
+	8650 700  8650 800 
+Wire Wire Line
+	7500 700  8650 700 
+Wire Wire Line
+	8650 1100 8650 800 
+Connection ~ 8650 800 
+Text Label 10700 7650 0    50   ~ 0
+2B
+Text Notes 7500 6900 0    50   ~ 0
+RocketTrig  Curtis Heisey
+$Comp
+L Mechanical:MountingHole H5
+U 1 1 5E2D602A
+P 2850 5700
+F 0 "H5" H 2950 5746 50  0000 L CNN
+F 1 "MountingHole" H 2950 5655 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm" H 2850 5700 50  0001 C CNN
+F 3 "~" H 2850 5700 50  0001 C CNN
+	1    2850 5700
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
