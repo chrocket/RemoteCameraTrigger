@@ -142,6 +142,7 @@ class FireTimer: public NonBlockingTimer{
 
 // Definition of output triggers
 FireTimer cameraTriggerTimer(CAMERA_TRIGGER_OUT_PIN, ON_TIME_MS );
+FireTimer cameraTriggerTimerShort(CAMERA_TRIGGER_OUT_PIN, 100 );
 FireTimer auxTriggerTimer(AUX_OUT_PIN, SHORT_TIME_MS ); 
 FireTimer txReceivedLEDTimer(LED_PIN, SHORT_TIME_MS ); 
 // These timers used to debounce buttons
@@ -245,6 +246,7 @@ void loop() {
     txReceivedLEDTimer.check();
     pollNonBlockingPressed.check();
     armNonBlockingPressed.check();
+    cameraTriggerTimerShort.check();
 
     // Read delay pot value
     int delayms = analogRead(DELAYMS_PIN);
@@ -289,6 +291,8 @@ void loop() {
      radiopacket[0]= 'T';  
      
      rf69.send((uint8_t *)radiopacket, strlen(radiopacket)); 
+     rf69.waitPacketSent();
+     rf69.send((uint8_t *)radiopacket, strlen(radiopacket)); // send twice
      rf69.waitPacketSent();
      Serial.print("Sensor Trigger - Sending T command ");Serial.println(radiopacket);    
   }
@@ -372,7 +376,9 @@ void loop() {
  
             delay(  myId_i );
             rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-            rf69.waitPacketSent();         
+            rf69.waitPacketSent();  
+
+                   cameraTriggerTimerShort.fire();
       }
       // poll response back from poll request
       if (strstr((char *)buf, "R")) { 
