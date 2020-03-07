@@ -14,8 +14,6 @@
 #include <SPI.h>
 #include <RH_RF69.h>
 
-#undef REV1
-
 
 #include <CRC32.h>
 // https://github.com/bakercp/CRC32/blob/master/examples/CRC32/CRC32.ino
@@ -44,28 +42,18 @@ void printChipId(char *buf) {
 
 
 // inputs
-#ifdef REV1
-const unsigned int LOWHIGH_TRIGGER_IN_PIN = 12; // If armed, Low to high transition will trigger
-const unsigned int DELAYMS_PIN=18;  // Pot on analog in to set delay 0-200 ms
-const unsigned int SPARE_PIN=19;  // Reserved for future use
-#else
 const unsigned int LOWHIGH_TRIGGER_IN_PIN = 5; // If armed, Low to high transition will trigger
-#endif
 const unsigned int HIGHLOW_TRIGGER_IN_PIN=17;  // If armed, High to low transition will trigger
 const unsigned int PUSH_IN_PIN=14; // Push button trigger override ("arm" does not have to be set)
 const unsigned int ARM_IN_PIN=15;  // Push button to arm sensor
 const unsigned int POLLREQUEST_IN_PIN=16;  // Push button to send roll call poll request to other nodes
-
-
+const unsigned int DELAYMS_PIN=18;  // Pot on analog in to set delay 0-200 ms
+const unsigned int SPARE_PIN=19;  // Reserved for future use
 
 // outputs
 // LED_OUT 13
 const unsigned int BUZZER_OUT_PIN= 10;            // Pin to audible indicator
-#ifdef REV1
-const unsigned int CAMERA_TRIGGER_OUT_PIN = 5;   // Pin for focus opto-isolator
-#else
 const unsigned int CAMERA_TRIGGER_OUT_PIN = 12;   // Pin for focus opto-isolator
-#endif
 const unsigned int CAMERA_FOCUS_OUT_PIN = 11;     // Pin for shtter opto-isoloatr
 const unsigned int AUX_OUT_PIN = 9;               // Pin for 2nd trigger output
 const unsigned int ARM_INDICATOR_OUT_PIN = 6;     // Indicates sensor is armed, turns laser on
@@ -154,6 +142,7 @@ class FireTimer: public NonBlockingTimer{
 
 // Definition of output triggers
 FireTimer cameraTriggerTimer(CAMERA_TRIGGER_OUT_PIN, ON_TIME_MS );
+FireTimer cameraTriggerTimerShort(CAMERA_TRIGGER_OUT_PIN, 50 );
 FireTimer auxTriggerTimer(AUX_OUT_PIN, SHORT_TIME_MS ); 
 FireTimer txReceivedLEDTimer(LED_PIN, SHORT_TIME_MS ); 
 // These timers used to debounce buttons
@@ -198,10 +187,8 @@ void setup()
   pinMode(POLLREQUEST_IN_PIN, INPUT_PULLUP);
   pinMode(ARM_IN_PIN, INPUT_PULLUP);
   pinMode(PUSH_IN_PIN, INPUT_PULLUP); 
-#ifdef REV1
   pinMode(DELAYMS_PIN, INPUT);
   pinMode(SPARE_PIN, INPUT_PULLUP);
-#endif
 
   
 
@@ -259,11 +246,10 @@ void loop() {
     txReceivedLEDTimer.check();
     pollNonBlockingPressed.check();
     armNonBlockingPressed.check();
+    cameraTriggerTimerShort.check();
 
-#ifdef REV1
     // Read delay pot value
     int delayms = analogRead(DELAYMS_PIN);
-#endif
 
    // TRIGGER OVERRIDE PB
    // If user presses "fire" push button, it will trigger outputs
@@ -306,6 +292,8 @@ void loop() {
      
      rf69.send((uint8_t *)radiopacket, strlen(radiopacket)); 
      rf69.waitPacketSent();
+     rf69.send((uint8_t *)radiopacket, strlen(radiopacket)); // send twice
+     rf69.waitPacketSent();
      Serial.print("Sensor Trigger - Sending T command ");Serial.println(radiopacket);    
   }
 
@@ -319,6 +307,7 @@ void loop() {
        rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
        rf69.waitPacketSent();
        Serial.print("Poll request PB, sending roll call request "); Serial.println(radiopacket);
+       cameraTriggerTimerShort.fire(); // fire camera briefly
        pollNonBlockingPressed.fire();
         tone(BUZZER_OUT_PIN, 1000 /* hz*/, 200 /* ms */);
    }
@@ -388,7 +377,10 @@ void loop() {
  
             delay(  myId_i );
             rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-            rf69.waitPacketSent();         
+            rf69.waitPacketSent();  
+
+                  
+           cameraTriggerTimerShort.fire();
       }
       // poll response back from poll request
       if (strstr((char *)buf, "R")) { 
