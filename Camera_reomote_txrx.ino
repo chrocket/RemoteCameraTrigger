@@ -1,6 +1,9 @@
-// rf69 demo tx rx.pde
-// -*- mode: C++ -*-
-// RadioHead libs
+// rf65/rf95 (lora) RocketTrig
+// https://github.com/chrocket/RemoteCameraTrigger
+// By Curtis Heisey
+// For use with Adafruit 3176 (RFM69( or Adafruit 3178 (LoRo RFM95) Feather M0 Packet radio modules
+//
+// Requires RadioHead libs
 // https://www.airspayce.com/mikem/arduino/RadioHead/index.html
 // Using (raw) unaddressed broadcast send
 // Demonstrates the use of AES encryption, setting the frequency and modem 
@@ -11,8 +14,39 @@
  *  CRC32 by Christopher Baker
  *  */
 
+ // Pick one module of the other
+
+ #define MODULE_RFM69
+ #undef MODULE_RFM95
+
+// #undef MODULE_RFM69
+// #define MODULE_RFM95
+
 #include <SPI.h>
-#include <RH_RF69.h>
+
+
+  #define RFM69_CS      8
+  #define RFM69_INT     3
+  #define RFM69_RST     4
+ #define LED_PIN           13
+  
+// Singleton instance of the radio driver
+#if defined(MODULE_RFM69)
+
+ 
+  #include <RH_RF69.h>
+  RH_RF69 radio_m0(RFM69_CS, RFM69_INT);  // Adafruit 3176
+  #define MAX_MESSAGE_LEN RH_RF69_MAX_MESSAGE_LEN
+#else
+  #include <RH_RF95.h>
+  #define RFM95_CS 8
+  #define RFM95_RST 4
+  #define RFM95_INT 3
+   RH_RF95 radio_m0(RFM95_CS, RFM95_INT);  // Adafruit 3178
+   #define MAX_MESSAGE_LEN RH_RF95_MAX_MESSAGE_LEN
+#endif
+
+
 
 
 #include <CRC32.h>
@@ -38,7 +72,10 @@ void printChipId(char *buf) {
 /************ Radio Setup ***************/
 
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF69_FREQ 915.3
+#define FREQ 915.3
+#define RF95_FREQ FREQ
+#define RF69_FREQ FREQ
+
 
 
 // inputs
@@ -64,22 +101,19 @@ const unsigned int  SHORT_TIME_MS = 200;
 uint32_t myId_i=0;
 char myId[3]={'abc'};
 // Dont put this on the stack:
-uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
+uint8_t buf[MAX_MESSAGE_LEN];
+//uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
 char radiopacket[5];
 
 bool isArmed = false;
 
 #if defined(ADAFRUIT_FEATHER_M0) // Feather M0 w/Radio
-  #define RFM69_CS      8
-  #define RFM69_INT     3
-  #define RFM69_RST     4
-  #define LED_PIN           13
+//TODO need to check for Adafruit Feather M0
 #endif
 
-// Other #define board types removed
 
-// Singleton instance of the radio driver
-RH_RF69 rf69(RFM69_CS, RFM69_INT);
+
+
 
 
 /*
@@ -151,14 +185,10 @@ NonBlockingTimer armNonBlockingPressed( SHORT_TIME_MS );
 
 
 
-
-
 void setup() 
 {
-  Serial.begin(115200);
-  //while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
- 
-  // read unique CPU Id
+
+   // read unique CPU Id
   char bufId[33];
   printChipId(bufId);
   myId_i = CRC32::calculate(bufId, 32); // compute checksum
@@ -170,10 +200,6 @@ void setup()
  radiopacket[2]=myId[1];
  radiopacket[3]=myId[2]; 
  radiopacket[4]='N'; // isArmed
-  
-  // RFM69 Reset pin definition   
-  pinMode(RFM69_RST, OUTPUT);
-  digitalWrite(RFM69_RST, LOW);
 
 // Arm indicator LED
   pinMode(ARM_INDICATOR_OUT_PIN, OUTPUT);
@@ -192,48 +218,89 @@ void setup()
 
   
 
-  Serial.println("CWH Camera Trigger RFM69 TXRX!");
+  Serial.println("CWH Camera Trigger RFM69/RFM95 TXRX!");
   Serial.println();
 
+    // RFM69 Reset pin definition   
+#if defined(MODULE_RFM69)
+  pinMode(RFM69_RST, OUTPUT);
+  digitalWrite(RFM69_RST, LOW);
+  
+#else
+   pinMode(RFM95_RST, OUTPUT);
+  digitalWrite(RFM95_RST, HIGH);
+
+#endif   
+  
+
+  Serial.begin(115200);
+  while (!Serial) {
+    delay(1);
+  }
+
+  delay(100);
+
+
   // manual reset
+  
+#if defined(MODULE_RFM69)
   digitalWrite(RFM69_RST, HIGH);
   delay(10);
   digitalWrite(RFM69_RST, LOW);
   delay(10);
+  Serial.println("Using module RFM65");
+#else
+    Serial.println("Using module RFM95");
+
+    
+#endif   
   
-  if (!rf69.init()) {
-    Serial.println("RFM69 radio init failed");
+
+  while (!radio_m0.init()) {
+    Serial.println("LoRa radio init failed");
+    Serial.println("Uncomment '#define SERIAL_DEBUG' in RH_RF95.cpp for detailed debug info");
     while (1);
   }
-  Serial.println("RFM69 radio init OK!");
-  // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM (for low power module)
-  // No encryption
- //   if (!rf69.setModemConfig(RH_RF69::GFSK_Rb2Fd5)) {
- //     Serial.println("setModem failed");
- // }
- 
-  if (!rf69.setFrequency(RF69_FREQ)) {
+  Serial.println("LoRa radio init OK!");
+
+  // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
+  if (!radio_m0.setFrequency(FREQ)) {
     Serial.println("setFrequency failed");
+    while (1);
   }
+  Serial.print("Set Freq to: "); Serial.println(FREQ);
+  
+
 
   // If you are using a high power RF69 eg RFM69HW, you *must* set a Tx power with the
   // ishighpowermodule flag set like this:
- 
-  rf69.setTxPower(20, true);  // range from 14-20 for power, 2nd arg must be true for 69HCW 
+ #if defined(MODULE_RFM69)
+     radio_m0.setTxPower(20, true);  // range from 14-20 for power, 2nd arg must be true for 69HCW 
+  #else
+      radio_m0.setTxPower(23, false);   
+  #endif
+  
 
 
 
   // The encryption keyhas to be the same as the one in the server
   uint8_t key[] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
                     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
-  rf69.setEncryptionKey(key);
+#if defined(MODULE_RFM69)
+ radio_m0.setEncryptionKey(key);
+#else
+// no encryption
+#endif
+ 
   
 
-  Serial.print("RFM69 radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
+  Serial.print("RFM69/95 radio @");  Serial.print((int)FREQ);  Serial.println(" MHz");
    tone(BUZZER_OUT_PIN, 100 /* hz*/, 2000 /* ms */);
+
+
+
+
 }
-
-
 
 
 
@@ -261,8 +328,8 @@ void loop() {
              
      // Trigger destination nodes
      radiopacket[0]= 'T';     
-     rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-     rf69.waitPacketSent();   
+     radio_m0.send((uint8_t *)radiopacket, strlen(radiopacket));
+     radio_m0.waitPacketSent();   
      
      Serial.print("PB Trigger Override, Sending Trigger out "); Serial.println(radiopacket);
       // clear isArmed flag state variable
@@ -290,10 +357,10 @@ void loop() {
     // Trigger destination nodes
      radiopacket[0]= 'T';  
      
-     rf69.send((uint8_t *)radiopacket, strlen(radiopacket)); 
-     rf69.waitPacketSent();
-     rf69.send((uint8_t *)radiopacket, strlen(radiopacket)); // send twice
-     rf69.waitPacketSent();
+     radio_m0.send((uint8_t *)radiopacket, strlen(radiopacket)); 
+     radio_m0.waitPacketSent();
+     radio_m0.send((uint8_t *)radiopacket, strlen(radiopacket)); // send twice
+     radio_m0.waitPacketSent();
      Serial.print("Sensor Trigger - Sending T command ");Serial.println(radiopacket);    
   }
 
@@ -304,8 +371,8 @@ void loop() {
 
        // Poll requeset to destination nodes
        radiopacket[0]= 'P';      
-       rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-       rf69.waitPacketSent();
+       radio_m0.send((uint8_t *)radiopacket, strlen(radiopacket));
+       radio_m0.waitPacketSent();
        Serial.print("Poll request PB, sending roll call request "); Serial.println(radiopacket);
        cameraTriggerTimerShort.fire(); // fire camera briefly
        pollNonBlockingPressed.fire();
@@ -320,8 +387,8 @@ void loop() {
    
       isArmed = true;
       radiopacket[0]= 'A';
-      rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-      rf69.waitPacketSent();
+      radio_m0.send((uint8_t *)radiopacket, strlen(radiopacket));
+      radio_m0.waitPacketSent();
       
      
      Serial.print("Arm PB,  Sending Arm command ");Serial.println(radiopacket);
@@ -333,10 +400,10 @@ void loop() {
   digitalWrite(CAMERA_FOCUS_OUT_PIN, isArmed);
 
  // Receive commands    
- if (rf69.available())
+ if (radio_m0.available())
   {
     uint8_t len = sizeof(buf);
-    if (rf69.recv(buf, &len)) {
+    if (radio_m0.recv(buf, &len)) {
       if (!len) return;
      // buf[len] = 0;
       buf[5] = 0;
@@ -346,7 +413,7 @@ void loop() {
       Serial.print("]: ");
       Serial.println((char*)buf);
       Serial.print("RSSI: ");
-      Serial.println(rf69.lastRssi(), DEC);
+      Serial.println(radio_m0.lastRssi(), DEC);
 */
 
     txReceivedLEDTimer.fire(); // blink the LED indicating a tx received
@@ -376,8 +443,8 @@ void loop() {
 
  
             delay(  myId_i );
-            rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-            rf69.waitPacketSent();  
+            radio_m0.send((uint8_t *)radiopacket, strlen(radiopacket));
+            radio_m0.waitPacketSent();  
 
                   
            cameraTriggerTimerShort.fire();
@@ -387,7 +454,7 @@ void loop() {
         Serial.print("Got an id response back: ");
         Serial.print((char*)buf);
         Serial.print(", RSSI: ");
-        Serial.println(rf69.lastRssi(), DEC);
+        Serial.println(radio_m0.lastRssi(), DEC);
         tone(BUZZER_OUT_PIN, 1500 /* hz*/, 100 /* ms */);
       }
 
