@@ -2,25 +2,27 @@
 // https://github.com/chrocket/RemoteCameraTrigger
 // By Curtis Heisey
 // For use with Adafruit 3176 (RFM69( or Adafruit 3178 (LoRo RFM95) Feather M0 Packet radio modules
+//  SX1276 LoRa® 
 //
 // Requires RadioHead libs
 // https://www.airspayce.com/mikem/arduino/RadioHead/index.html
+// Download from Adafruit https://cdn-learn.adafruit.com/assets/assets/000/035/106/original/RadioHead-1.62.zip?1472068723
 // Using (raw) unaddressed broadcast send
 // Demonstrates the use of AES encryption, setting the frequency and modem 
 // configuration
 
 /* Libs
- *  LowPowerLab/RFM69
- *  CRC32 by Christopher Baker
+ *  LowPowerLab/RFM69  (Download from Adfaruit).
+ *  CRC32 by Christopher Baker  - install using Arduino IDE library manager
  *  */
 
  // Pick one module of the other
 
- #define MODULE_RFM69
- #undef MODULE_RFM95
+// #define MODULE_RFM69
+// #undef MODULE_RFM95
 
-// #undef MODULE_RFM69
-// #define MODULE_RFM95
+ #undef MODULE_RFM69
+ #define MODULE_RFM95
 
 #include <SPI.h>
 
@@ -71,7 +73,7 @@ void printChipId(char *buf) {
 
 /************ Radio Setup ***************/
 
-// Change to 434.0 or other frequency, must match RX's freq!
+// ISM 33cm band USA 902-928 MHZ
 #define FREQ 915.3
 #define RF95_FREQ FREQ
 #define RF69_FREQ FREQ
@@ -234,10 +236,12 @@ void setup()
   
 
   Serial.begin(115200);
+  // Uncomment to not start until serial console is attached (for debugging)
+  /*
   while (!Serial) {
     delay(1);
   }
-
+*/
   delay(100);
 
 
