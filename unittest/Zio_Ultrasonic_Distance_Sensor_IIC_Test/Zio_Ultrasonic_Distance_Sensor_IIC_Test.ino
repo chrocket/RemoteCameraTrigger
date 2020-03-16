@@ -12,13 +12,17 @@ uint16_t distance=0;
 #define OLED_RESET 4
 Adafruit_SSD1306 display(OLED_RESET);
 
+unsigned int t_last=0;
+
 #if (SSD1306_LCDHEIGHT != 32)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
 #endif
 
+#define Serial SerialUSB
+
 void setup() {
   Wire.begin(); // join i2c bus (address optional for master)
-  Serial.begin(9600);  // start serial for output
+  Serial.begin(115200);  // start serial for output
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
   Serial.println("IIC testing......");
   display.clearDisplay();
@@ -30,6 +34,9 @@ void setup() {
 
 
 void loop() {
+
+   unsigned int t_now = micros();
+  
   Wire.beginTransmission(SLAVE_ADDR); // transmit to device #8
   Wire.write(1);              // measure command: 0x01
   Wire.endTransmission();    // stop transmitting 
@@ -40,18 +47,23 @@ void loop() {
   distance_L = Wire.read();  
   distance = (uint16_t)distance_H<<8;
   distance = distance|distance_L; 
-  Serial.print(distance);         // print the character
-  Serial.println("mm"); 
+  Serial.print(distance*0.0393701);         // print the character
+  Serial.print("in "); 
+  unsigned int delta = t_now - t_last;
+  t_last = t_now;
+  Serial.print(", delta (us) = ");
+  Serial.println(delta);
+  
   display.setTextSize(2);
   display.setTextColor(WHITE);
   display.setCursor(10,0);
   display.clearDisplay();
-  display.print(distance);
-  display.print("mm");
+  display.print(distance*0.0393701);
+  display.print("in");
   display.display();
   delay(1);
   
-  delay(100);
+  
+ // delay(100);
  }
 }
-
