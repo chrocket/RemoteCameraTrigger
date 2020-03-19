@@ -98,7 +98,7 @@ const unsigned int CAMERA_FOCUS_OUT_PIN = 11;     // Pin for shtter opto-isoloat
 const unsigned int AUX_OUT_PIN = 9;               // Pin for 2nd trigger output
 const unsigned int ARM_INDICATOR_OUT_PIN = 6;     // Indicates sensor is armed, turns laser on
 
-const unsigned int  ON_TIME_MS = 1000 ;          // Camera bulb on time when trigger fires (typical vals 1-3 seconds)      
+const unsigned int  ON_TIME_MS = 2000 ;          // Camera bulb on time when trigger fires (typical vals 1-3 seconds)      
 const unsigned int  SHORT_TIME_MS = 200;
 
 uint32_t myId_i=0;
