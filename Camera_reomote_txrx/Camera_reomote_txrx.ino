@@ -1,4 +1,4 @@
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++d
 // rf65/rf95 (lora) RocketTrig
 // https://github.com/chrocket/RemoteCameraTrigger
 // By Curtis Heisey
@@ -163,6 +163,14 @@ class FireTimer: public NonBlockingTimer{
       pinMode(pinLED, OUTPUT);
       isPressed=LOW;
     }
+     void fire(){
+      isPressed  = HIGH;
+      digitalWrite(pinLED, isPressed);
+      unsigned long currentTime = millis();
+      nextChangeTime = currentTime + timeFireOn;        
+     }
+
+    
     // Checks whether it is time to turn on or off the Output
     bool check() {
       unsigned long currentTime = millis();
