@@ -1125,14 +1125,8 @@ Text Label 5650 4350 2    50   ~ 0
 SCL
 Text Label 5650 4450 2    50   ~ 0
 SDA
-Wire Wire Line
-	5400 4350 5650 4350
-Wire Wire Line
-	5400 4450 5650 4450
 Text GLabel 5850 4250 2    50   Input ~ 0
 SensorIn
-NoConn ~ 5650 4350
-NoConn ~ 5650 4450
 Text GLabel 5850 4150 2    50   Input ~ 0
 ArmInd
 Wire Wire Line
@@ -1346,16 +1340,12 @@ Wire Wire Line
 	2150 5350 2450 5350
 Wire Wire Line
 	2150 5250 2450 5250
-Text GLabel 3300 4150 0    50   Input ~ 0
+Text GLabel 5850 4350 2    50   Input ~ 0
 SCL_qwiic
-Text GLabel 3300 4250 0    50   Input ~ 0
+Text GLabel 5850 4450 2    50   Input ~ 0
 SDA_qwiic
 Wire Wire Line
 	3300 3950 4000 3950
-Wire Wire Line
-	3300 4250 4000 4250
-Wire Wire Line
-	3300 4150 4000 4150
 NoConn ~ 3300 3950
 $Comp
 L Connector:Screw_Terminal_01x04 J13
@@ -1437,4 +1427,15 @@ Wire Wire Line
 	1500 2100 1700 2100
 Text GLabel 3300 4050 0    50   Input ~ 0
 Threshold
+Wire Wire Line
+	5400 4350 5850 4350
+Wire Wire Line
+	5400 4450 5850 4450
+Wire Wire Line
+	3800 4150 4000 4150
+Wire Wire Line
+	3800 4250 4000 4250
+NoConn ~ 3800 4150
+NoConn ~ 3800 4250
+NoConn ~ 5500 3100
 $EndSCHEMATC
