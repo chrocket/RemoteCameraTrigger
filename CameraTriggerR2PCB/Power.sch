@@ -4,7 +4,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 8
+Sheet 3 9
 Title ""
 Date ""
 Rev ""
@@ -68,72 +68,6 @@ F 3 "~" H 1950 1050 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	1950 1150 1950 1400
-Wire Wire Line
-	4000 3350 4000 3400
-Wire Wire Line
-	4400 3400 4400 3550
-Wire Wire Line
-	3650 3400 3650 3550
-$Comp
-L power:GND #PWR?
-U 1 1 5EC589AF
-P 4400 3550
-AR Path="/5EC589AF" Ref="#PWR?"  Part="1" 
-AR Path="/5EBC5EC2/5EC589AF" Ref="#PWR017"  Part="1" 
-F 0 "#PWR017" H 4400 3300 50  0001 C CNN
-F 1 "GND" H 4405 3377 50  0000 C CNN
-F 2 "" H 4400 3550 50  0001 C CNN
-F 3 "" H 4400 3550 50  0001 C CNN
-	1    4400 3550
-	-1   0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 5EC589B5
-P 3650 3550
-AR Path="/5EC589B5" Ref="#PWR?"  Part="1" 
-AR Path="/5EBC5EC2/5EC589B5" Ref="#PWR014"  Part="1" 
-F 0 "#PWR014" H 3650 3300 50  0001 C CNN
-F 1 "GND" H 3655 3377 50  0000 C CNN
-F 2 "" H 3650 3550 50  0001 C CNN
-F 3 "" H 3650 3550 50  0001 C CNN
-	1    3650 3550
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	4400 3050 4400 3100
-Wire Wire Line
-	3650 3100 3650 3050
-$Comp
-L Device:C C?
-U 1 1 5EC589BD
-P 3650 3250
-AR Path="/5EC589BD" Ref="C?"  Part="1" 
-AR Path="/5EBC5EC2/5EC589BD" Ref="C1"  Part="1" 
-F 0 "C1" H 3765 3296 50  0000 L CNN
-F 1 "0.1uf" H 3765 3205 50  0000 L CNN
-F 2 "Capacitor_THT:CP_Radial_Tantal_D5.0mm_P5.00mm" H 3688 3100 50  0001 C CNN
-F 3 "~" H 3650 3250 50  0001 C CNN
-	1    3650 3250
-	-1   0    0    -1  
-$EndComp
-$Comp
-L Device:CP C?
-U 1 1 5EC589C3
-P 4400 3250
-AR Path="/5EC589C3" Ref="C?"  Part="1" 
-AR Path="/5EBC5EC2/5EC589C3" Ref="C2"  Part="1" 
-F 0 "C2" H 4518 3296 50  0000 L CNN
-F 1 "25uf" H 4518 3205 50  0000 L CNN
-F 2 "Capacitor_THT:CP_Radial_Tantal_D5.0mm_P5.00mm" H 4438 3100 50  0001 C CNN
-F 3 "~" H 4400 3250 50  0001 C CNN
-	1    4400 3250
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	3700 3050 3650 3050
-Wire Wire Line
-	4400 3050 4350 3050
 $Comp
 L Connector:Screw_Terminal_01x02 J?
 U 1 1 5EC589CB
@@ -160,42 +94,6 @@ F 3 "" H 6050 3600 50  0001 C CNN
 	1    6050 3600
 	-1   0    0    -1  
 $EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 5EC589D7
-P 4000 3400
-AR Path="/5EC589D7" Ref="#PWR?"  Part="1" 
-AR Path="/5EBC5EC2/5EC589D7" Ref="#PWR015"  Part="1" 
-F 0 "#PWR015" H 4000 3150 50  0001 C CNN
-F 1 "GND" H 4005 3227 50  0000 C CNN
-F 2 "" H 4000 3400 50  0001 C CNN
-F 3 "" H 4000 3400 50  0001 C CNN
-	1    4000 3400
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	3650 3000 3650 3050
-Connection ~ 3650 3050
-Wire Wire Line
-	3000 3000 3300 3000
-$Comp
-L Device:D D?
-U 1 1 5EC589E0
-P 4350 2750
-AR Path="/5EC589E0" Ref="D?"  Part="1" 
-AR Path="/5EBC5EC2/5EC589E0" Ref="D4"  Part="1" 
-F 0 "D4" V 4396 2671 50  0000 R CNN
-F 1 "D" V 4305 2671 50  0000 R CNN
-F 2 "Diode_THT:D_DO-201AD_P12.70mm_Horizontal" H 4350 2750 50  0001 C CNN
-F 3 "~" H 4350 2750 50  0001 C CNN
-	1    4350 2750
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	4350 2900 4350 3050
-Connection ~ 4350 3050
-Wire Wire Line
-	4350 3050 4300 3050
 $Comp
 L Device:LED D?
 U 1 1 5EC589E9
@@ -224,7 +122,6 @@ F 3 "~" H 2650 3150 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	2650 3000 3000 3000
-Connection ~ 3000 3000
 Wire Wire Line
 	2650 3300 2650 3400
 $Comp
@@ -240,35 +137,6 @@ F 3 "" H 3000 3000 50  0001 C CNN
 	1    3000 3000
 	1    0    0    -1  
 $EndComp
-$Comp
-L Regulator_Linear:LM7805_TO220 U?
-U 1 1 5EC589FF
-P 4000 3050
-AR Path="/5EC589FF" Ref="U?"  Part="1" 
-AR Path="/5EBC5EC2/5EC589FF" Ref="U3"  Part="1" 
-F 0 "U3" H 4000 3292 50  0000 C CNN
-F 1 "LM7805_TO220" H 4000 3201 50  0000 C CNN
-F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 4000 3275 50  0001 C CIN
-F 3 "http://www.fairchildsemi.com/ds/LM/LM7805.pdf" H 4000 3000 50  0001 C CNN
-	1    4000 3050
-	-1   0    0    -1  
-$EndComp
-$Comp
-L Connector:TestPoint TP1+?
-U 1 1 5EC58A05
-P 3300 3000
-AR Path="/5EC58A05" Ref="TP1+?"  Part="1" 
-AR Path="/5EBC5EC2/5EC58A05" Ref="TP1+1"  Part="1" 
-F 0 "TP1+1" H 3358 3118 50  0000 L CNN
-F 1 "+5V" H 3358 3027 50  0000 L CNN
-F 2 "TestPoint:TestPoint_Keystone_5010-5014_Multipurpose" H 3500 3000 50  0001 C CNN
-F 3 "~" H 3500 3000 50  0001 C CNN
-	1    3300 3000
-	1    0    0    -1  
-$EndComp
-Connection ~ 3300 3000
-Wire Wire Line
-	3300 3000 3650 3000
 $Comp
 L power:GND #PWR?
 U 1 1 5EC58A0D
@@ -313,22 +181,6 @@ F 3 "" H 6300 2850 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	6300 2850 6300 3000
-$Comp
-L power:PWR_FLAG #FLG?
-U 1 1 5EC58A22
-P 4550 3050
-AR Path="/5EC58A22" Ref="#FLG?"  Part="1" 
-AR Path="/5EBC5EC2/5EC58A22" Ref="#FLG01"  Part="1" 
-F 0 "#FLG01" H 4550 3125 50  0001 C CNN
-F 1 "PWR_FLAG" H 4550 3223 50  0000 C CNN
-F 2 "" H 4550 3050 50  0001 C CNN
-F 3 "~" H 4550 3050 50  0001 C CNN
-	1    4550 3050
-	1    0    0    -1  
-$EndComp
-Connection ~ 4400 3050
-Wire Wire Line
-	4400 3050 4550 3050
 $Comp
 L Mechanical:MountingHole_Pad H?
 U 1 1 5EC58A2A
@@ -536,9 +388,341 @@ Wire Wire Line
 	1600 4400 1600 4750
 NoConn ~ 5700 4000
 NoConn ~ 5800 4000
-Connection ~ 5700 3000
-Connection ~ 4350 2600
 Connection ~ 2650 3700
 Wire Wire Line
 	2650 3700 2650 3900
+$Comp
+L power:PWR_FLAG #FLG?
+U 1 1 5EC58A22
+P 4550 3050
+AR Path="/5EC58A22" Ref="#FLG?"  Part="1" 
+AR Path="/5EBC5EC2/5EC58A22" Ref="#FLG01"  Part="1" 
+F 0 "#FLG01" H 4550 3125 50  0001 C CNN
+F 1 "PWR_FLAG" H 4550 3223 50  0000 C CNN
+F 2 "" H 4550 3050 50  0001 C CNN
+F 3 "~" H 4550 3050 50  0001 C CNN
+	1    4550 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 3000 3650 3000
+$Comp
+L Connector:TestPoint TP1+?
+U 1 1 5EC58A05
+P 3300 3000
+AR Path="/5EC58A05" Ref="TP1+?"  Part="1" 
+AR Path="/5EBC5EC2/5EC58A05" Ref="TP1+1"  Part="1" 
+F 0 "TP1+1" H 3358 3118 50  0000 L CNN
+F 1 "+5V" H 3358 3027 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Keystone_5010-5014_Multipurpose" H 3500 3000 50  0001 C CNN
+F 3 "~" H 3500 3000 50  0001 C CNN
+	1    3300 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Regulator_Linear:LM7805_TO220 U?
+U 1 1 5EC589FF
+P 4000 3050
+AR Path="/5EC589FF" Ref="U?"  Part="1" 
+AR Path="/5EBC5EC2/5EC589FF" Ref="U3"  Part="1" 
+F 0 "U3" H 4000 3292 50  0000 C CNN
+F 1 "LM7805_TO220" H 4000 3201 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 4000 3275 50  0001 C CIN
+F 3 "http://www.fairchildsemi.com/ds/LM/LM7805.pdf" H 4000 3000 50  0001 C CNN
+	1    4000 3050
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	4350 3050 4300 3050
+Connection ~ 4350 3050
+Wire Wire Line
+	4350 2900 4350 3050
+$Comp
+L Device:D D?
+U 1 1 5EC589E0
+P 4350 2750
+AR Path="/5EC589E0" Ref="D?"  Part="1" 
+AR Path="/5EBC5EC2/5EC589E0" Ref="D4"  Part="1" 
+F 0 "D4" V 4396 2671 50  0000 R CNN
+F 1 "D" V 4305 2671 50  0000 R CNN
+F 2 "Diode_THT:D_DO-201AD_P12.70mm_Horizontal" H 4350 2750 50  0001 C CNN
+F 3 "~" H 4350 2750 50  0001 C CNN
+	1    4350 2750
+	0    -1   -1   0   
+$EndComp
+Connection ~ 3300 3000
+Connection ~ 3000 3000
+Wire Wire Line
+	3000 3000 3300 3000
+Wire Wire Line
+	3650 3000 3650 3050
+$Comp
+L power:GND #PWR?
+U 1 1 5EC589D7
+P 4000 3400
+AR Path="/5EC589D7" Ref="#PWR?"  Part="1" 
+AR Path="/5EBC5EC2/5EC589D7" Ref="#PWR015"  Part="1" 
+F 0 "#PWR015" H 4000 3150 50  0001 C CNN
+F 1 "GND" H 4005 3227 50  0000 C CNN
+F 2 "" H 4000 3400 50  0001 C CNN
+F 3 "" H 4000 3400 50  0001 C CNN
+	1    4000 3400
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 3050 3650 3050
+$Comp
+L Device:CP C?
+U 1 1 5EC589C3
+P 4400 3250
+AR Path="/5EC589C3" Ref="C?"  Part="1" 
+AR Path="/5EBC5EC2/5EC589C3" Ref="C2"  Part="1" 
+F 0 "C2" H 4518 3296 50  0000 L CNN
+F 1 "25uf" H 4518 3205 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_Tantal_D5.0mm_P5.00mm" H 4438 3100 50  0001 C CNN
+F 3 "~" H 4400 3250 50  0001 C CNN
+	1    4400 3250
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5EC589BD
+P 3650 3250
+AR Path="/5EC589BD" Ref="C?"  Part="1" 
+AR Path="/5EBC5EC2/5EC589BD" Ref="C1"  Part="1" 
+F 0 "C1" H 3765 3296 50  0000 L CNN
+F 1 "0.1uf" H 3765 3205 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_Tantal_D5.0mm_P5.00mm" H 3688 3100 50  0001 C CNN
+F 3 "~" H 3650 3250 50  0001 C CNN
+	1    3650 3250
+	-1   0    0    -1  
+$EndComp
+Connection ~ 3650 3050
+Wire Wire Line
+	3650 3100 3650 3050
+Wire Wire Line
+	4400 3050 4550 3050
+Wire Wire Line
+	4400 3050 4350 3050
+Connection ~ 4400 3050
+Wire Wire Line
+	4400 3050 4400 3100
+$Comp
+L power:GND #PWR?
+U 1 1 5EC589B5
+P 3650 3550
+AR Path="/5EC589B5" Ref="#PWR?"  Part="1" 
+AR Path="/5EBC5EC2/5EC589B5" Ref="#PWR014"  Part="1" 
+F 0 "#PWR014" H 3650 3300 50  0001 C CNN
+F 1 "GND" H 3655 3377 50  0000 C CNN
+F 2 "" H 3650 3550 50  0001 C CNN
+F 3 "" H 3650 3550 50  0001 C CNN
+	1    3650 3550
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5EC589AF
+P 4400 3550
+AR Path="/5EC589AF" Ref="#PWR?"  Part="1" 
+AR Path="/5EBC5EC2/5EC589AF" Ref="#PWR017"  Part="1" 
+F 0 "#PWR017" H 4400 3300 50  0001 C CNN
+F 1 "GND" H 4405 3377 50  0000 C CNN
+F 2 "" H 4400 3550 50  0001 C CNN
+F 3 "" H 4400 3550 50  0001 C CNN
+	1    4400 3550
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3650 3400 3650 3550
+Wire Wire Line
+	4400 3400 4400 3550
+Wire Wire Line
+	4000 3350 4000 3400
+$Comp
+L power:PWR_FLAG #FLG?
+U 1 1 5EBF8C68
+P 4450 5700
+AR Path="/5EBF8C68" Ref="#FLG?"  Part="1" 
+AR Path="/5EBC5EC2/5EBF8C68" Ref="#FLG?"  Part="1" 
+F 0 "#FLG?" H 4450 5775 50  0001 C CNN
+F 1 "PWR_FLAG" H 4450 5873 50  0000 C CNN
+F 2 "" H 4450 5700 50  0001 C CNN
+F 3 "~" H 4450 5700 50  0001 C CNN
+	1    4450 5700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Regulator_Linear:LM7805_TO220 U?
+U 1 1 5EBF8C75
+P 3900 5700
+AR Path="/5EBF8C75" Ref="U?"  Part="1" 
+AR Path="/5EBC5EC2/5EBF8C75" Ref="U?"  Part="1" 
+F 0 "U?" H 3900 5942 50  0000 C CNN
+F 1 "LM7803_TO220" H 3900 5851 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 3900 5925 50  0001 C CIN
+F 3 "http://www.fairchildsemi.com/ds/LM/LM7805.pdf" H 3900 5650 50  0001 C CNN
+	1    3900 5700
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 5650 3550 5700
+$Comp
+L power:GND #PWR?
+U 1 1 5EBF8C87
+P 3900 6050
+AR Path="/5EBF8C87" Ref="#PWR?"  Part="1" 
+AR Path="/5EBC5EC2/5EBF8C87" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3900 5800 50  0001 C CNN
+F 1 "GND" H 3905 5877 50  0000 C CNN
+F 2 "" H 3900 6050 50  0001 C CNN
+F 3 "" H 3900 6050 50  0001 C CNN
+	1    3900 6050
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3600 5700 3550 5700
+$Comp
+L Device:CP C?
+U 1 1 5EBF8C8E
+P 4300 5900
+AR Path="/5EBF8C8E" Ref="C?"  Part="1" 
+AR Path="/5EBC5EC2/5EBF8C8E" Ref="C?"  Part="1" 
+F 0 "C?" H 4418 5946 50  0000 L CNN
+F 1 "25uf" H 4418 5855 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_Tantal_D5.0mm_P5.00mm" H 4338 5750 50  0001 C CNN
+F 3 "~" H 4300 5900 50  0001 C CNN
+	1    4300 5900
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5EBF8C94
+P 3550 5900
+AR Path="/5EBF8C94" Ref="C?"  Part="1" 
+AR Path="/5EBC5EC2/5EBF8C94" Ref="C?"  Part="1" 
+F 0 "C?" H 3665 5946 50  0000 L CNN
+F 1 "0.1uf" H 3665 5855 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_Tantal_D5.0mm_P5.00mm" H 3588 5750 50  0001 C CNN
+F 3 "~" H 3550 5900 50  0001 C CNN
+	1    3550 5900
+	-1   0    0    -1  
+$EndComp
+Connection ~ 3550 5700
+Wire Wire Line
+	3550 5750 3550 5700
+Wire Wire Line
+	4300 5700 4450 5700
+Connection ~ 4300 5700
+Wire Wire Line
+	4300 5700 4300 5750
+$Comp
+L power:GND #PWR?
+U 1 1 5EBF8CA0
+P 3550 6200
+AR Path="/5EBF8CA0" Ref="#PWR?"  Part="1" 
+AR Path="/5EBC5EC2/5EBF8CA0" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3550 5950 50  0001 C CNN
+F 1 "GND" H 3555 6027 50  0000 C CNN
+F 2 "" H 3550 6200 50  0001 C CNN
+F 3 "" H 3550 6200 50  0001 C CNN
+	1    3550 6200
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5EBF8CA6
+P 4300 6200
+AR Path="/5EBF8CA6" Ref="#PWR?"  Part="1" 
+AR Path="/5EBC5EC2/5EBF8CA6" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4300 5950 50  0001 C CNN
+F 1 "GND" H 4305 6027 50  0000 C CNN
+F 2 "" H 4300 6200 50  0001 C CNN
+F 3 "" H 4300 6200 50  0001 C CNN
+	1    4300 6200
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 6050 3550 6200
+Wire Wire Line
+	4300 6050 4300 6200
+Wire Wire Line
+	3900 6000 3900 6050
+Wire Wire Line
+	4200 5700 4300 5700
+Wire Wire Line
+	2900 5650 3550 5650
+$Comp
+L power:+5V #PWR?
+U 1 1 5EBFB6DE
+P 4300 5700
+F 0 "#PWR?" H 4300 5550 50  0001 C CNN
+F 1 "+5V" H 4315 5873 50  0000 C CNN
+F 2 "" H 4300 5700 50  0001 C CNN
+F 3 "" H 4300 5700 50  0001 C CNN
+	1    4300 5700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5EBFBAE2
+P 2900 5650
+F 0 "#PWR?" H 2900 5500 50  0001 C CNN
+F 1 "+3.3V" H 2915 5823 50  0000 C CNN
+F 2 "" H 2900 5650 50  0001 C CNN
+F 3 "" H 2900 5650 50  0001 C CNN
+	1    2900 5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+7.5V #PWR?
+U 1 1 5EBFEB12
+P 7500 3400
+F 0 "#PWR?" H 7500 3250 50  0001 C CNN
+F 1 "+7.5V" H 7515 3573 50  0000 C CNN
+F 2 "" H 7500 3400 50  0001 C CNN
+F 3 "" H 7500 3400 50  0001 C CNN
+	1    7500 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5EBFF08E
+P 7500 3600
+F 0 "R?" H 7570 3646 50  0000 L CNN
+F 1 "R" H 7570 3555 50  0000 L CNN
+F 2 "" V 7430 3600 50  0001 C CNN
+F 3 "~" H 7500 3600 50  0001 C CNN
+	1    7500 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5EBFFC02
+P 7500 3900
+F 0 "R?" H 7570 3946 50  0000 L CNN
+F 1 "R" H 7570 3855 50  0000 L CNN
+F 2 "" V 7430 3900 50  0001 C CNN
+F 3 "~" H 7500 3900 50  0001 C CNN
+	1    7500 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5EC00A08
+P 7500 4050
+F 0 "#PWR?" H 7500 3800 50  0001 C CNN
+F 1 "GND" H 7505 3877 50  0000 C CNN
+F 2 "" H 7500 4050 50  0001 C CNN
+F 3 "" H 7500 4050 50  0001 C CNN
+	1    7500 4050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7500 3750 7850 3750
+Connection ~ 7500 3750
+Text HLabel 7850 3750 2    50   Input ~ 0
+V_bat_monitor
+Wire Wire Line
+	7500 3400 7500 3450
 $EndSCHEMATC

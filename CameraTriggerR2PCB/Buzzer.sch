@@ -4,7 +4,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 8 8
+Sheet 6 9
 Title ""
 Date ""
 Rev ""
@@ -44,5 +44,6 @@ F 3 "~" V 1925 3950 50  0001 C CNN
 $EndComp
 Text HLabel 1550 3750 0    50   Input ~ 0
 Buzzer
-Connection ~ 1850 3750
+Text Notes 3050 3100 0    50   ~ 0
+TODO Add transistor
 $EndSCHEMATC

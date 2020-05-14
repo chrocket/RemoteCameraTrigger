@@ -4,7 +4,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 8
+Sheet 2 9
 Title ""
 Date ""
 Rev ""
@@ -39,19 +39,6 @@ F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 3830 5200 
 F 3 "~" H 3900 5200 50  0001 C CNN
 	1    3900 5200
 	0    1    1    0   
-$EndComp
-$Comp
-L Device:LED D?
-U 1 1 5ECCF3A5
-P 3150 2900
-AR Path="/5ECCF3A5" Ref="D?"  Part="1" 
-AR Path="/5EBC562C/5ECCF3A5" Ref="D1"  Part="1" 
-F 0 "D1" H 3143 2645 50  0000 C CNN
-F 1 "LED Trig" H 3143 2736 50  0000 C CNN
-F 2 "LED_THT:LED_D3.0mm" H 3150 2900 50  0001 C CNN
-F 3 "~" H 3150 2900 50  0001 C CNN
-	1    3150 2900
-	-1   0    0    1   
 $EndComp
 $Comp
 L Device:R R?
@@ -384,16 +371,7 @@ F 3 "~" H 3050 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2850 2350 2850 2900
-Connection ~ 2850 2900
-Wire Wire Line
 	3150 5200 3200 5200
-Wire Wire Line
-	2850 2900 3000 2900
-Wire Wire Line
-	2800 2900 2850 2900
-Wire Wire Line
-	2650 2900 2850 2900
 Wire Wire Line
 	6300 2200 5800 2200
 Wire Wire Line
@@ -404,9 +382,32 @@ Wire Wire Line
 	5500 2150 5500 2000
 NoConn ~ 6300 2100
 NoConn ~ 6200 2100
-Text HLabel 2650 2900 0    50   Input ~ 0
-Shutter
+Text Notes 8750 2700 0    50   ~ 0
+TODO - put two sets of jacks on each
 Text HLabel 3150 5200 0    50   Input ~ 0
 Focus
-Connection ~ 3200 5200
+Text HLabel 2650 2900 0    50   Input ~ 0
+Shutter
+Wire Wire Line
+	2650 2900 2850 2900
+Wire Wire Line
+	2800 2900 2850 2900
+Wire Wire Line
+	2850 2900 3000 2900
+Connection ~ 2850 2900
+Wire Wire Line
+	2850 2350 2850 2900
+$Comp
+L Device:LED D?
+U 1 1 5ECCF3A5
+P 3150 2900
+AR Path="/5ECCF3A5" Ref="D?"  Part="1" 
+AR Path="/5EBC562C/5ECCF3A5" Ref="D1"  Part="1" 
+F 0 "D1" H 3143 2645 50  0000 C CNN
+F 1 "LED Trig" H 3143 2736 50  0000 C CNN
+F 2 "LED_THT:LED_D3.0mm" H 3150 2900 50  0001 C CNN
+F 3 "~" H 3150 2900 50  0001 C CNN
+	1    3150 2900
+	-1   0    0    1   
+$EndComp
 $EndSCHEMATC
