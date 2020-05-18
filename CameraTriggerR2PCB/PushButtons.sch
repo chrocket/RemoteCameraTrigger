@@ -162,16 +162,12 @@ Wire Wire Line
 Wire Wire Line
 	3900 2600 3900 2750
 Wire Wire Line
-	4200 4250 4300 4250
-Wire Wire Line
 	3550 4000 3550 4300
 Connection ~ 3800 2500
 Wire Wire Line
 	3800 2500 3900 2500
 Wire Wire Line
 	3600 2500 3800 2500
-Wire Wire Line
-	3800 2250 4200 2250
 Wire Wire Line
 	3800 2250 3800 2500
 $Comp
@@ -231,8 +227,6 @@ Wire Wire Line
 	4000 3000 4000 3300
 Connection ~ 4350 3000
 Wire Wire Line
-	4350 3000 4500 3000
-Wire Wire Line
 	4150 3400 4150 3650
 Wire Wire Line
 	4150 3650 4250 3650
@@ -258,10 +252,24 @@ $EndComp
 Wire Wire Line
 	3650 2750 3900 2750
 Connection ~ 3900 2750
-Text HLabel 4200 2250 2    50   Input ~ 0
+Text HLabel 5950 2350 2    50   Input ~ 0
 PbTrigIn
-Text HLabel 4500 3000 2    50   Input ~ 0
+Text HLabel 5950 3000 2    50   Input ~ 0
 ArmIn
-Text HLabel 4300 4250 2    50   Input ~ 0
+Text HLabel 5950 4200 2    50   Input ~ 0
 Poll
+Wire Wire Line
+	5900 2250 5900 2350
+Wire Wire Line
+	5900 2350 5950 2350
+Wire Wire Line
+	3800 2250 5900 2250
+Wire Wire Line
+	4350 3000 5950 3000
+Wire Wire Line
+	5850 4250 5850 4200
+Wire Wire Line
+	5850 4200 5950 4200
+Wire Wire Line
+	4200 4250 5850 4250
 $EndSCHEMATC
