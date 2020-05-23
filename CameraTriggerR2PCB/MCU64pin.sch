@@ -395,31 +395,6 @@ F 3 "~" H 3400 1500 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3100 1400 3100 1500
-$Comp
-L Connector:Conn_01x05_Male J?
-U 1 1 5EC2144A
-P 7700 2800
-AR Path="/5EBC729C/5EC2144A" Ref="J?"  Part="1" 
-AR Path="/5EBF5198/5EC2144A" Ref="J18"  Part="1" 
-F 0 "J18" H 7808 3181 50  0000 C CNN
-F 1 "JTAG" H 7808 3090 50  0000 C CNN
-F 2 "" H 7700 2800 50  0001 C CNN
-F 3 "~" H 7700 2800 50  0001 C CNN
-	1    7700 2800
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7100 2600 7700 2600
-Wire Wire Line
-	6900 2700 7700 2700
-Wire Wire Line
-	6900 2800 7750 2800
-Wire Wire Line
-	7300 2900 7700 2900
-Wire Wire Line
-	7600 3350 7600 3000
-Wire Wire Line
-	7600 3000 7700 3000
 Text HLabel 6200 2100 2    50   Input ~ 0
 RFM95_SCK
 Text HLabel 6150 2000 2    50   Input ~ 0
@@ -594,4 +569,95 @@ Text HLabel 6150 3400 2    50   Input ~ 0
 Focus
 Wire Wire Line
 	5900 3400 6150 3400
+Wire Notes Line
+	4950 5950 7650 5950
+Wire Notes Line
+	7650 5950 7650 6300
+Wire Notes Line
+	7650 6300 4950 6300
+Wire Notes Line
+	4950 6300 4950 5950
+Text Notes 5150 6050 0    50   ~ 0
+https://github.com/stm32duino/Arduino_Core_STM32
+$Comp
+L Connector:Conn_01x04_Male J18
+U 1 1 5EC344C0
+P 8600 2900
+F 0 "J18" H 8708 3181 50  0000 C CNN
+F 1 "SWD" H 8708 3090 50  0000 C CNN
+F 2 "" H 8600 2900 50  0001 C CNN
+F 3 "~" H 8600 2900 50  0001 C CNN
+	1    8600 2900
+	-1   0    0    1   
+$EndComp
+Text Notes 5100 6150 0    50   ~ 0
+https://stm32-base.org/guides/connecting-your-debugger.html
+Text GLabel 8150 2800 0    50   Input ~ 0
+SWDCK
+Text GLabel 8150 2700 0    50   Input ~ 0
+SWDIO
+Wire Wire Line
+	8150 2700 8400 2700
+Wire Wire Line
+	8150 2800 8400 2800
+$Comp
+L power:GND #PWR?
+U 1 1 5EC411F0
+P 8200 3250
+F 0 "#PWR?" H 8200 3000 50  0001 C CNN
+F 1 "GND" H 8205 3077 50  0000 C CNN
+F 2 "" H 8200 3250 50  0001 C CNN
+F 3 "" H 8200 3250 50  0001 C CNN
+	1    8200 3250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8200 3250 8200 3000
+Wire Wire Line
+	8200 3000 8400 3000
+$Comp
+L power:GND #PWR?
+U 1 1 5EC43694
+P 7000 3800
+F 0 "#PWR?" H 7000 3550 50  0001 C CNN
+F 1 "GND" H 7005 3627 50  0000 C CNN
+F 2 "" H 7000 3800 50  0001 C CNN
+F 3 "" H 7000 3800 50  0001 C CNN
+	1    7000 3800
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5EC440F8
+P 7850 3050
+F 0 "#PWR?" H 7850 2900 50  0001 C CNN
+F 1 "+3.3V" H 7865 3223 50  0000 C CNN
+F 2 "" H 7850 3050 50  0001 C CNN
+F 3 "" H 7850 3050 50  0001 C CNN
+	1    7850 3050
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	7000 3800 7000 3900
+Wire Wire Line
+	7000 3900 7100 3900
+Wire Wire Line
+	7850 3050 7850 2900
+Wire Wire Line
+	7850 2900 8400 2900
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5EC49841
+P 6750 3800
+F 0 "#PWR?" H 6750 3650 50  0001 C CNN
+F 1 "+3.3V" H 6765 3973 50  0000 C CNN
+F 2 "" H 6750 3800 50  0001 C CNN
+F 3 "" H 6750 3800 50  0001 C CNN
+	1    6750 3800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6750 4000 7100 4000
+Wire Wire Line
+	6750 3800 6750 4000
 $EndSCHEMATC

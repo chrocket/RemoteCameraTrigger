@@ -1,10 +1,9 @@
 EESchema Schematic File Version 4
-LIBS:CameraTrigger-cache
 EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 8 9
+Sheet 1 1
 Title ""
 Date ""
 Rev ""
@@ -174,13 +173,13 @@ Connection ~ 3150 3550
 Wire Wire Line
 	3150 3550 2700 3550
 Text HLabel 3000 4550 0    50   Input ~ 0
-BT_WIFI_TX
+NINA_TX
 Text HLabel 3000 4650 0    50   Input ~ 0
-BT_WIFI_RX
+NINA_RX
 Text HLabel 3000 4350 0    50   Input ~ 0
-BT_WIFI_RTS
+NINA_RTS_CS
 Text HLabel 3000 4450 0    50   Input ~ 0
-BT_WIFI_CTS
+NINA_CTS_SCK
 Wire Wire Line
 	3000 4350 3100 4350
 Wire Wire Line
@@ -229,7 +228,7 @@ Wire Wire Line
 Wire Wire Line
 	9450 3600 9550 3600
 Text HLabel 2900 4250 0    50   Input ~ 0
-Reset_N
+NINA_RESETN
 $Comp
 L power:GND #PWR052
 U 1 1 5EBA8D2B
@@ -361,6 +360,7 @@ P 10800 1900
 AR Path="/5E9FE63A/5EBD38BF" Ref="#PWR?"  Part="1" 
 AR Path="/5EA0B5A0/5EBD38BF" Ref="#PWR?"  Part="1" 
 AR Path="/5EBC729C/5EBD38BF" Ref="#PWR062"  Part="1" 
+AR Path="/5EBD38BF" Ref="#PWR062"  Part="1" 
 F 0 "#PWR062" H 10800 1650 50  0001 C CNN
 F 1 "GND" H 10805 1727 50  0000 C CNN
 F 2 "" H 10800 1900 50  0001 C CNN
@@ -380,6 +380,7 @@ P 10100 1350
 AR Path="/5E9FE63A/5EBD38C8" Ref="10K?"  Part="1" 
 AR Path="/5EA0B5A0/5EBD38C8" Ref="10K?"  Part="1" 
 AR Path="/5EBC729C/5EBD38C8" Ref="10K1"  Part="1" 
+AR Path="/5EBD38C8" Ref="10K1"  Part="1" 
 F 0 "10K1" H 10170 1396 50  0000 L CNN
 F 1 "R" H 10170 1305 50  0000 L CNN
 F 2 "" V 10030 1350 50  0001 C CNN
@@ -394,6 +395,7 @@ P 10100 1100
 AR Path="/5E9FE63A/5EBD38CE" Ref="#PWR?"  Part="1" 
 AR Path="/5EA0B5A0/5EBD38CE" Ref="#PWR?"  Part="1" 
 AR Path="/5EBC729C/5EBD38CE" Ref="#PWR060"  Part="1" 
+AR Path="/5EBD38CE" Ref="#PWR060"  Part="1" 
 F 0 "#PWR060" H 10100 950 50  0001 C CNN
 F 1 "+3.3V" H 10115 1273 50  0000 C CNN
 F 2 "" H 10100 1100 50  0001 C CNN
@@ -416,6 +418,7 @@ P 10100 1800
 AR Path="/5E9FE63A/5EBD38D8" Ref="10K?"  Part="1" 
 AR Path="/5EA0B5A0/5EBD38D8" Ref="10K?"  Part="1" 
 AR Path="/5EBC729C/5EBD38D8" Ref="10K2"  Part="1" 
+AR Path="/5EBD38D8" Ref="10K2"  Part="1" 
 F 0 "10K2" H 10170 1846 50  0000 L CNN
 F 1 "R" H 10170 1755 50  0000 L CNN
 F 2 "" V 10030 1800 50  0001 C CNN
@@ -430,6 +433,7 @@ P 10100 2050
 AR Path="/5E9FE63A/5EBD38DE" Ref="#PWR?"  Part="1" 
 AR Path="/5EA0B5A0/5EBD38DE" Ref="#PWR?"  Part="1" 
 AR Path="/5EBC729C/5EBD38DE" Ref="#PWR061"  Part="1" 
+AR Path="/5EBD38DE" Ref="#PWR061"  Part="1" 
 F 0 "#PWR061" H 10100 1900 50  0001 C CNN
 F 1 "+3.3V" H 10115 2223 50  0000 C CNN
 F 2 "" H 10100 2050 50  0001 C CNN
@@ -514,12 +518,9 @@ Wire Wire Line
 	3000 5000 3050 5000
 Text Notes 5550 5550 0    50   ~ 0
 Todo - put crystal on\nBreak MISO/MISI/SCK/CS lines  (goes to MCU)
-NoConn ~ 3500 2450
 NoConn ~ 3500 2550
 NoConn ~ 3500 2650
 NoConn ~ 3500 2750
-NoConn ~ 3500 2850
-NoConn ~ 3500 3050
 NoConn ~ 3500 3150
 NoConn ~ 3500 3450
 NoConn ~ 3500 3650
@@ -528,14 +529,57 @@ NoConn ~ 3500 3950
 NoConn ~ 3500 4050
 NoConn ~ 3500 4150
 NoConn ~ 3500 4750
-Connection ~ 3500 2950
-Connection ~ 3500 3250
-Connection ~ 3500 3350
-Connection ~ 3500 3550
-Connection ~ 3500 3750
-Connection ~ 3500 4250
-Connection ~ 3500 4350
-Connection ~ 3500 4450
-Connection ~ 3500 4550
-Connection ~ 3500 4650
+$Comp
+L Oscillator:SG-3030CM X?
+U 1 1 5EC5D6A2
+P 2050 2000
+F 0 "X?" H 1821 2046 50  0000 R CNN
+F 1 "SG-3030CM" H 1821 1955 50  0000 R CNN
+F 2 "Oscillator:Oscillator_SMD_SeikoEpson_SG3030CM" H 2050 1650 50  0001 C CNN
+F 3 "https://support.epson.biz/td/api/doc_check.php?mode=dl&lang=en&Parts=SG-3030CM" H 1950 2000 50  0001 C CNN
+	1    2050 2000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2350 2000 3250 2000
+Wire Wire Line
+	3250 2000 3250 2850
+Wire Wire Line
+	3250 2850 3500 2850
+Connection ~ 3500 2850
+Wire Wire Line
+	3500 2850 3550 2850
+$Comp
+L power:GND #PWR?
+U 1 1 5EC67323
+P 2050 2300
+F 0 "#PWR?" H 2050 2050 50  0001 C CNN
+F 1 "GND" H 2055 2127 50  0000 C CNN
+F 2 "" H 2050 2300 50  0001 C CNN
+F 3 "" H 2050 2300 50  0001 C CNN
+	1    2050 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5EC67736
+P 1950 1700
+F 0 "#PWR?" H 1950 1550 50  0001 C CNN
+F 1 "+3.3V" H 1965 1873 50  0000 C CNN
+F 2 "" H 1950 1700 50  0001 C CNN
+F 3 "" H 1950 1700 50  0001 C CNN
+	1    1950 1700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1950 1700 2150 1700
+Connection ~ 1950 1700
+Text HLabel 3450 3050 0    50   Input ~ 0
+NINA_ACK
+Text HLabel 3700 1700 0    50   Input ~ 0
+NINA_GPIO0
+Text HLabel 2100 4300 0    50   Input ~ 0
+NINA_MISO
+Text HLabel 3500 2450 0    50   Input ~ 0
+NINA_MOSI
 $EndSCHEMATC
