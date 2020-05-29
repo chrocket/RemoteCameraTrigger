@@ -4,7 +4,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 8
+Sheet 2 9
 Title ""
 Date ""
 Rev ""
@@ -41,19 +41,6 @@ F 3 "~" H 3900 5200 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:LED D?
-U 1 1 5ECCF3A5
-P 3150 2900
-AR Path="/5ECCF3A5" Ref="D?"  Part="1" 
-AR Path="/5EBC562C/5ECCF3A5" Ref="D1"  Part="1" 
-F 0 "D1" H 3143 2645 50  0000 C CNN
-F 1 "LED Trig" H 3143 2736 50  0000 C CNN
-F 2 "LED_THT:LED_D3.0mm" H 3150 2900 50  0001 C CNN
-F 3 "~" H 3150 2900 50  0001 C CNN
-	1    3150 2900
-	-1   0    0    1   
-$EndComp
-$Comp
 L Device:R R?
 U 1 1 5ECCF3AB
 P 3650 2900
@@ -69,28 +56,13 @@ $EndComp
 Wire Wire Line
 	6200 3600 6200 3000
 Wire Wire Line
-	5600 3800 6200 3800
-$Comp
-L Connector:AudioJack3 J?
-U 1 1 5ECCF3B4
-P 6500 2300
-AR Path="/5ECCF3B4" Ref="J?"  Part="1" 
-AR Path="/5EBC562C/5ECCF3B4" Ref="J2"  Part="1" 
-F 0 "J2" H 6220 2233 50  0000 R CNN
-F 1 "Camera 2.5mm" H 6220 2324 50  0000 R CNN
-F 2 "CameraTriggerPCB:CUI_SJ1-2503A" H 6500 2300 50  0001 C CNN
-F 3 "~" H 6500 2300 50  0001 C CNN
-	1    6500 2300
-	-1   0    0    1   
-$EndComp
+	5600 3800 5750 3800
 Wire Wire Line
 	7200 4500 7200 2850
 Wire Wire Line
 	7200 2850 6150 2850
 Wire Wire Line
 	6150 2850 6150 2300
-Wire Wire Line
-	6150 2300 6300 2300
 Wire Wire Line
 	7450 4600 7450 2550
 Wire Wire Line
@@ -237,7 +209,7 @@ Wire Wire Line
 Wire Wire Line
 	4550 2350 4350 2350
 Wire Wire Line
-	6300 2450 5750 2450
+	6300 2450 6100 2450
 Wire Wire Line
 	5750 2450 5750 2200
 Wire Wire Line
@@ -309,7 +281,7 @@ F 3 "https://www.vishay.com/docs/83640/ild74.pdf" H 4950 3750 50  0001 L CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6200 3700 5400 3700
+	6200 3700 5900 3700
 Wire Wire Line
 	5400 3700 5400 3650
 Wire Wire Line
@@ -358,19 +330,6 @@ Wire Wire Line
 Wire Wire Line
 	3300 2900 3500 2900
 $Comp
-L Device:LED D?
-U 1 1 5ECCF43E
-P 3350 5200
-AR Path="/5ECCF43E" Ref="D?"  Part="1" 
-AR Path="/5EBC562C/5ECCF43E" Ref="D2"  Part="1" 
-F 0 "D2" V 3389 5083 50  0000 R CNN
-F 1 "LED Focus" V 3298 5083 50  0000 R CNN
-F 2 "LED_THT:LED_D3.0mm" H 3350 5200 50  0001 C CNN
-F 3 "~" H 3350 5200 50  0001 C CNN
-	1    3350 5200
-	-1   0    0    1   
-$EndComp
-$Comp
 L Connector:TestPoint TP4Fire?
 U 1 1 5ECCF444
 P 2850 2350
@@ -384,29 +343,133 @@ F 3 "~" H 3050 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2850 2350 2850 2900
-Connection ~ 2850 2900
-Wire Wire Line
-	3150 5200 3200 5200
-Wire Wire Line
-	2850 2900 3000 2900
-Wire Wire Line
-	2800 2900 2850 2900
-Wire Wire Line
-	2650 2900 2850 2900
-Wire Wire Line
-	6300 2200 5800 2200
-Wire Wire Line
 	5800 2200 5800 2150
 Wire Wire Line
 	5800 2150 5500 2150
 Wire Wire Line
 	5500 2150 5500 2000
-NoConn ~ 6300 2100
-NoConn ~ 6200 2100
+Text HLabel 2850 5200 0    50   Input ~ 0
+Focus
 Text HLabel 2650 2900 0    50   Input ~ 0
 Shutter
-Text HLabel 3150 5200 0    50   Input ~ 0
-Focus
-Connection ~ 3200 5200
+Wire Wire Line
+	2650 2900 2850 2900
+Wire Wire Line
+	2800 2900 2850 2900
+Wire Wire Line
+	2850 2900 3000 2900
+Connection ~ 2850 2900
+Wire Wire Line
+	2850 2350 2850 2900
+$Comp
+L Device:LED D?
+U 1 1 5ECCF3A5
+P 3150 2900
+AR Path="/5ECCF3A5" Ref="D?"  Part="1" 
+AR Path="/5EBC562C/5ECCF3A5" Ref="D1"  Part="1" 
+F 0 "D1" H 3143 2645 50  0000 C CNN
+F 1 "LED Trig" H 3143 2736 50  0000 C CNN
+F 2 "LED_THT:LED_D3.0mm" H 3150 2900 50  0001 C CNN
+F 3 "~" H 3150 2900 50  0001 C CNN
+	1    3150 2900
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector:AudioJack3 J?
+U 1 1 5EC210E3
+P 6400 4150
+AR Path="/5EC210E3" Ref="J?"  Part="1" 
+AR Path="/5EBC562C/5EC210E3" Ref="J12"  Part="1" 
+F 0 "J12" H 6120 4083 50  0000 R CNN
+F 1 "Camera 2.5mm" H 6120 4174 50  0000 R CNN
+F 2 "CameraTriggerPCB:CUI_SJ1-2503A" H 6400 4150 50  0001 C CNN
+F 3 "~" H 6400 4150 50  0001 C CNN
+	1    6400 4150
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector:AudioJack3 J?
+U 1 1 5EC230DE
+P 6500 1750
+AR Path="/5EC230DE" Ref="J?"  Part="1" 
+AR Path="/5EBC562C/5EC230DE" Ref="J13"  Part="1" 
+F 0 "J13" H 6220 1683 50  0000 R CNN
+F 1 "Camera 3.5mm" H 6220 1774 50  0000 R CNN
+F 2 "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal_CircularHoles" H 6500 1750 50  0001 C CNN
+F 3 "~https://www.mouser.com/datasheet/2/670/sj1-353xng-1313133.pdf" H 6500 1750 50  0001 C CNN
+	1    6500 1750
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6200 4050 6000 4050
+Wire Wire Line
+	6000 4050 6000 3600
+Wire Wire Line
+	6000 3600 6200 3600
+Connection ~ 6200 3600
+Wire Wire Line
+	5900 4150 5900 3700
+Connection ~ 5900 3700
+Wire Wire Line
+	5900 3700 5400 3700
+Wire Wire Line
+	6200 4250 5750 4250
+Wire Wire Line
+	5750 4250 5750 3800
+Connection ~ 5750 3800
+Wire Wire Line
+	5750 3800 6200 3800
+Wire Wire Line
+	5900 4150 6200 4150
+Wire Wire Line
+	6150 2300 6300 2300
+Wire Wire Line
+	6300 2200 6000 2200
+$Comp
+L Connector:AudioJack3 J?
+U 1 1 5ECCF3B4
+P 6500 2300
+AR Path="/5ECCF3B4" Ref="J?"  Part="1" 
+AR Path="/5EBC562C/5ECCF3B4" Ref="J2"  Part="1" 
+F 0 "J2" H 6220 2233 50  0000 R CNN
+F 1 "Camera 2.5mm" H 6220 2324 50  0000 R CNN
+F 2 "CameraTriggerPCB:CUI_SJ1-2503A" H 6500 2300 50  0001 C CNN
+F 3 "~" H 6500 2300 50  0001 C CNN
+	1    6500 2300
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6300 1850 6100 1850
+Wire Wire Line
+	6100 1850 6100 2450
+Connection ~ 6100 2450
+Wire Wire Line
+	6100 2450 5750 2450
+Wire Wire Line
+	6150 2300 6150 1750
+Wire Wire Line
+	6150 1750 6300 1750
+Connection ~ 6150 2300
+Wire Wire Line
+	6000 2200 6000 1650
+Wire Wire Line
+	6000 1650 6300 1650
+Connection ~ 6000 2200
+Wire Wire Line
+	6000 2200 5800 2200
+$Comp
+L Device:LED D?
+U 1 1 5ECCF43E
+P 3350 5200
+AR Path="/5ECCF43E" Ref="D?"  Part="1" 
+AR Path="/5EBC562C/5ECCF43E" Ref="D2"  Part="1" 
+F 0 "D2" V 3389 5083 50  0000 R CNN
+F 1 "LED Focus" V 3298 5083 50  0000 R CNN
+F 2 "LED_THT:LED_D3.0mm" H 3350 5200 50  0001 C CNN
+F 3 "~" H 3350 5200 50  0001 C CNN
+	1    3350 5200
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	2850 5200 3200 5200
 $EndSCHEMATC
