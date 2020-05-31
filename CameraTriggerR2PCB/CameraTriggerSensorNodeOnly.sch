@@ -1483,7 +1483,7 @@ U 1 1 5ED156BB
 P 3350 5350
 F 0 "J7" H 3350 5715 50  0000 C CNN
 F 1 "XLR5" H 3350 5624 50  0000 C CNN
-F 2 "Jack_XLR_Neutrik_NC5FAV-DA_Vertical" H 3350 5350 50  0001 C CNN
+F 2 "SamacSys_Parts:Jack_XLR_Neutrik_NC5MBH_Horizontal" H 3350 5350 50  0001 C CNN
 F 3 " ~" H 3350 5350 50  0001 C CNN
 	1    3350 5350
 	1    0    0    -1  
@@ -1536,17 +1536,6 @@ F 3 "" H 3350 5650 50  0001 C CNN
 	1    3350 5650
 	-1   0    0    1   
 $EndComp
-$Comp
-L Connector:Conn_01x03_Male J8
-U 1 1 5ED3C6BA
-P 4800 5950
-F 0 "J8" H 4908 6231 50  0000 C CNN
-F 1 " " H 4908 6140 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 4800 5950 50  0001 C CNN
-F 3 "~" H 4800 5950 50  0001 C CNN
-	1    4800 5950
-	-1   0    0    1   
-$EndComp
 Wire Wire Line
 	3650 5950 3650 5450
 Wire Wire Line
@@ -1566,15 +1555,25 @@ Wire Wire Line
 	5400 6700 5800 6700
 Wire Wire Line
 	5700 6800 5800 6800
-Text GLabel 4600 5850 0    50   Input ~ 0
+Text GLabel 5000 5850 2    50   Input ~ 0
 AuxIn
-Text GLabel 4600 6050 0    50   Input ~ 0
+Text GLabel 5000 6050 2    50   Input ~ 0
 SensorIn
 Wire Wire Line
 	3650 5950 4600 5950
-Text Label 4900 5850 0    50   ~ 0
+Text Label 5350 5850 0    50   ~ 0
 HighLow
-Text Label 4900 6050 0    50   ~ 0
+Text Label 5350 6050 0    50   ~ 0
 LowHigh
-Connection ~ 4600 6050
+$Comp
+L Switch:SW_SPDT SW4
+U 1 1 5ED58B25
+P 4800 5950
+F 0 "SW4" H 4800 6235 50  0000 C CNN
+F 1 "SW_SPDT" H 4800 6144 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_Slide_1P2T_CK_OS102011MS2Q" H 4800 5950 50  0001 C CNN
+F 3 "~" H 4800 5950 50  0001 C CNN
+	1    4800 5950
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
